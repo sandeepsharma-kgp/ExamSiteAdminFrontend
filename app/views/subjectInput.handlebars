@@ -1,0 +1,23 @@
+<div class="container">
+  <h1 style="text-align: center"> Add a subject </h1>
+      <div class="form-group" style="width: 30%; margin: 25px auto">
+  <form action="/subject/add" method="POST">
+    <div class="form-group">
+      <input type="text" class="form-control" name="subjectID" placeholder="Subject ID">
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" name="subjectName" placeholder="Subject Name">
+    </div>
+    <div class="form-group">
+      <button type="submit"class="btn btn-primary btn-lg btn-block"> Submit </button>
+    </div>
+    <div class="form-group">
+    </div>
+    <a href= "/"> Go back </a>
+  </form>
+
+<br>
+  <div class="alert alert-success" role="alert">
+    {{successMessage}}
+  </div>
+</br>
