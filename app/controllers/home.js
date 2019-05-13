@@ -56,6 +56,7 @@ con.query(sqlQuery, [subjectID], function(error, results){
   if(results.length){
     // The username already exists
     console.log("Id exists");
+
   }else{
     // The username wasn't found in the database
     console.log("ID doesnt exist");
@@ -136,12 +137,55 @@ router.post('/topic/add', function(req, res)
 {
   var topicID= req.body.topicID;
   var topicName= req.body.topicName;
-  res.render("topicInput", { successMessage: "Subject added successfully!!" });
-  db.topic.create({
-    topicId: req.body.topicID,
-    topicName: req.body.topicName,
+  res.render("topicInput", { successMessage1: "Topic added successfully!!" });
+
+  var sqlQuery = "SELECT * FROM Topics WHERE topicID = ? LIMIT 1";
+  con.query(sqlQuery, [topicID], function(error, results){
+    // There was an issue with the query
+    if(error){
+      console.log(error);
+      return;
+    }
+
+    if(results.length){
+      // The username already exists
+      console.log("Id exists");
+
+    }else{
+      // The username wasn't found in the database
+      console.log("ID doesnt exist");
+      db.topic.create({
+        topicId: req.body.topicID,
+        topicName: req.body.topicName,
+      });
+    }
   });
 
+});
+
+router.get('/topic/update', function(req, res) {
+  res.render("updateTopic");
+});
+
+
+router.post('/topic/update', function(req, res) {
+
+  // update statment
+  var sql = `UPDATE Topics
+             SET topicName = ?
+             WHERE topicID = ?`;
+
+  var data = [req.body.newtopicName, req.body.topicID];
+
+  // execute the UPDATE statement
+  con.query(sql, data, (error, results) => {
+    if (error){
+      return console.error(error.message);
+    }
+    console.log('Rows affected:', results.affectedRows);
+    console.log(results);
+    res.redirect("/topic/update")
+  });
 });
 
 router.get('/topic/read', function(req, res) {
@@ -236,7 +280,7 @@ router.get('/view', function (req, res)
       }
 
             console.log(rows);
-            res.render("view", {data : rows});
+            res.render("view", {rows : rows});
     });
 
 });
@@ -265,4 +309,12 @@ var data = [];
   });
         console.log(data);
   // connected! (unless `err` is set)
+});
+
+router.get('/api/v1/subject/all', function (req, res) {
+  db.subject.findAll().then(function(data) {
+    res.json(data);
+  }).catch(function(err) {
+    res.status(400).json({ error: err })
+  });
 });
