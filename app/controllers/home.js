@@ -41,12 +41,32 @@ router.get('/subject/add', function(req, res)
 
 router.post('/subject/add', function(req, res)
 {
+
   res.render("subjectInput", { successMessage: "Subject added successfully!!" });
-  db.Subject.create({
-    subjectID:  req.body.subjectID,
-    subjectName: req.body.subjectName,
-  });
+  var subjectID = req.body.subjectID; // This will come from your signup form
+
+var sqlQuery = "SELECT * FROM Subjects WHERE subjectID = ? LIMIT 1";
+con.query(sqlQuery, [subjectID], function(error, results){
+  // There was an issue with the query
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  if(results.length){
+    // The username already exists
+    console.log("Id exists");
+  }else{
+    // The username wasn't found in the database
+    console.log("ID doesnt exist");
+    db.Subject.create({
+      subjectID:  req.body.subjectID,
+      subjectName: req.body.subjectName,
+    });
+  }
 });
+});
+
 
 router.get('/subject/read', function(req, res) {
  con.query('SELECT * FROM Subjects', (err,rows) => {
@@ -58,16 +78,51 @@ router.get('/subject/read', function(req, res) {
 });
 
 router.get('/subject/update', function(req, res) {
-  res.render("update");
-  var subjectID = req.body.subjectID;
-  con.query(
-    'UPDATE subjects SET subjectName = req.body.newsubjectName Where subjectID = req.body.subjectID',
-    [req.newsubjectName, req.body.subjectID],
-    (err, result) => {
-      if (err) throw err;
-      }
-  );
+  res.render("updateSubject");
+});
 
+
+router.post('/subject/update', function(req, res) {
+
+  // update statment
+  var sql = `UPDATE Subjects
+             SET subjectName = ?
+             WHERE subjectID = ?`;
+
+  var data = [req.body.newsubjectName, req.body.subjectID];
+
+  // execute the UPDATE statement
+  con.query(sql, data, (error, results) => {
+    if (error){
+      return console.error(error.message);
+    }
+    console.log('Rows affected:', results.affectedRows);
+    console.log(results);
+  });
+
+  res.redirect("/subject/read")
+});
+
+router.get('/subject/search', function(req, res)
+{
+  res.render("searchSubject");
+
+});
+
+router.post('/subject/search', function(req, res) {
+
+  // update statment
+  var sql = `SELECT subjectName FROM  Subjects
+             WHERE subjectID = ?`;
+
+  // execute the UPDATE statement
+  con.query(sql, req.body.subjectID, function(error, results) {
+    if (error){
+      return console.error(error.message);
+    }
+    console.log(results);
+  });
+  res.redirect("/subject/search");
 });
 
 
@@ -98,6 +153,54 @@ router.get('/topic/read', function(req, res) {
 
 });
 
+router.get('/topic/update', function(req, res) {
+  res.render("updateTopic");
+});
+
+
+router.post('/topic/update', function(req, res) {
+
+  // update statment
+  var sql = `UPDATE Topics
+             SET topicName = ?
+             WHERE topicID = ?`;
+
+  var data = [req.body.newtopicName, req.body.topicID];
+
+  // execute the UPDATE statement
+  con.query(sql, data, (error, results) => {
+    if (error){
+      return console.error(error.message);
+    }
+    console.log('Rows affected:', results.affectedRows);
+    console.log(results);
+  });
+
+});
+
+
+router.get('/topic/search', function(req, res)
+{
+  res.render("searchTopic");
+
+});
+
+router.post('/topic/search', function(req, res) {
+
+  // update statment
+  var sql = `SELECT topicName FROM  Topics
+             WHERE topicID = ?`;
+
+  // execute the UPDATE statement
+  con.query(sql, req.body.topicID, function(error, results) {
+    if (error){
+      return console.error(error.message);
+    }
+    console.log(results);
+  });
+  res.redirect("/topic/search");
+});
+
  router.get('/add/questions', function (req, res)
 {
   res.render("questions");
@@ -117,4 +220,49 @@ router.post('/add/questions', function (req, res)
       question.topic = req.body.topic;
       question.save();
       res.redirect('/add/questions');
-}); 
+});
+
+router.get('/view', function (req, res)
+{
+
+  var quer1 = "SELECT * FROM Subjects";
+
+   con.query(quer1, function(err, rows) {
+
+      if (err) {
+
+          console.log(err);
+
+      }
+
+            console.log(rows);
+            res.render("view", {data : rows});
+    });
+
+});
+
+router.get('/view1',function(req,res){
+
+
+var quer1 = "SELECT * FROM Subjects";
+var data = [];
+
+ con.query(quer1, function(err, rows) {
+
+    if (err) {
+
+        console.log(err);
+
+
+    }
+         console.log(rows);
+         for(var i= 0; i<rows.length; i++)
+         {
+          data[i] = [rows[i].subjectID, rows[i].subjectName];
+        /*   console.log(data); */
+         }
+         console.log(data);
+  });
+        console.log(data);
+  // connected! (unless `err` is set)
+});

@@ -1,0 +1,67 @@
+{{data}}
+
+<div class="row m-b-18px">
+    <div class="col-md-12">
+        <!-- button to create new product -->
+        <a (click)="createProduct()" class='btn btn-primary pull-right' href="/subject/add">
+            <span class='glyphicon glyphicon-plus'></span> Add Subject
+        </a>
+        <a (click)="createProduct()" class='btn btn-primary pull-right' href="/subject/search">
+            <span class='glyphicon glyphicon-plus'></span> Search
+        </a>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <!-- HTML table for our list of product records -->
+        <table class='table table-hover table-responsive table-bordered' >
+
+            <tr>
+                <th>Subject ID</th>
+                <th>Subject Name</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Actions</th>
+                        <th>{{data.subjectID}}</th>
+            </tr>
+
+            <!-- Use *ngFor directive to loop throught our list of products. -->
+            <tr *ngFor="let subject of subjects">
+                <td>{{data.subjectID}}</td>
+                <td>{{data.subjectName}}</td>
+                <td>{{product.description}}</td>
+                <td>{{product.category_name}}</td>
+                <td>
+                    <!-- read one product button -->
+                    <a (click)="readOneProduct(product.id)" class='btn btn-primary m-r-5px'>
+                        <span class='glyphicon glyphicon-eye-open'></span> Read
+                    </a>
+
+                    <!-- edit product button -->
+                    <a (click)="updateProduct(product.id)" class='btn btn-info m-r-5px'>
+                        <span class='glyphicon glyphicon-edit'></span> Edit
+                    </a>
+
+                    <!-- delete product button -->
+                    <a (click)="deleteProduct(product.id)" class='btn btn-danger m-r-5px'>
+                        <span class='glyphicon glyphicon-remove'></span> Delete
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<style media="screen">
+
+
+/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+.m-b-18px{ margin-bottom: 18px; }
+.m-r-5px{ margin-right: 5px; }
+.w-40-pct{ width: 40%; }
+.text-align-center{ text-align: center; }
+</style>

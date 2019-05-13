@@ -1,0 +1,21 @@
+<html>
+   <head><script type="text/javascript" src="ejs_production.js"></script>
+   </head>
+<body>
+<% console.log(rows) %>
+<table>
+    <tr>
+    <th>Subject ID</th>
+    <th>Subject Name</th>
+  </tr>
+<% for(var i=0; i < rows.length; i++) { %>
+   <tr>
+     <td><%= rows[i].subjectID %></td>
+     <td><%= rows[i].subjectName %></td>
+   </tr>
+<% } %>
+</table>
+
+
+</body>
+</html>
