@@ -10,7 +10,7 @@ const config = {
     },
     port: process.env.PORT || 3000,
     db: 'mysql://Turbo:temp12345@localhost/examsiteadminfrontend_development',
-    mongoDb: 'mysql://Turbo:temp12345@localhost/examsiteadminfrontend_development'
+    mongoDb: 'mongodb://localhost/examsiteadminfrontend_development'
 
   },
 

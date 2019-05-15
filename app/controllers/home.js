@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
+const mongoose = require('mongoose');
 const Subject = require('../models/subject');
 /* var Question = require('../models/questions'); */
 
@@ -14,6 +15,8 @@ var con = mysql.createConnection({
   database: "examsiteadminfrontend_development"
 });
 
+mongoose.connect('mongodb://localhost/examsiteadminfrontend_development');
+  console.log("Connection created!!");
 
 
 module.exports = (app) => {
@@ -26,13 +29,6 @@ router.get('/', function(req,res){
 
 });
 
-
-/* router.get('/add', function(req, res)
-{
-  res.render("addInfo");
-
-});
-*/
 router.get('/subject/add', function(req, res)
 {
   res.render("subjectInput");
@@ -68,15 +64,6 @@ con.query(sqlQuery, [subjectID], function(error, results){
 });
 });
 
-
-router.get('/subject/read', function(req, res) {
- con.query('SELECT * FROM Subjects', (err,rows) => {
-  if(err) throw err;
-  console.log(rows);
-    res.send(rows);
-});
-
-});
 
 router.get('/subject/update', function(req, res) {
   res.render("updateSubject");
@@ -188,14 +175,6 @@ router.post('/topic/update', function(req, res) {
   });
 });
 
-router.get('/topic/read', function(req, res) {
- con.query('SELECT * FROM Topics', (err,rows) => {
-  if(err) throw err;
-  console.log(rows);
-    res.send(rows);
-});
-
-});
 
 router.get('/topic/update', function(req, res) {
   res.render("updateTopic");
@@ -244,13 +223,13 @@ router.post('/topic/search', function(req, res) {
   });
   res.redirect("/topic/search");
 });
-
- router.get('/add/questions', function (req, res)
+/*
+ router.get('/question/add', function (req, res)
 {
   res.render("questions");
 });
 
-router.post('/add/questions', function (req, res)
+router.post('/question/add', function (req, res)
 {
   var question = new Question();
       question.Id = req.body.quesID;
@@ -263,10 +242,10 @@ router.post('/add/questions', function (req, res)
       question.subject = req.body.subject;
       question.topic = req.body.topic;
       question.save();
-      res.redirect('/add/questions');
+      res.redirect('/question/add');
 });
-
-router.get('/view', function (req, res)
+*/
+router.get('/view1', function (req, res)
 {
 
   var quer1 = "SELECT * FROM Subjects";
@@ -280,36 +259,11 @@ router.get('/view', function (req, res)
       }
 
             console.log(rows);
-            res.render("view", {rows : rows});
+            res.render("view1", {rows : rows});
     });
 
 });
 
-router.get('/view1',function(req,res){
-
-
-var quer1 = "SELECT * FROM Subjects";
-var data = [];
-
- con.query(quer1, function(err, rows) {
-
-    if (err) {
-
-        console.log(err);
-
-
-    }
-         console.log(rows);
-         for(var i= 0; i<rows.length; i++)
-         {
-          data[i] = [rows[i].subjectID, rows[i].subjectName];
-        /*   console.log(data); */
-         }
-         console.log(data);
-  });
-        console.log(data);
-  // connected! (unless `err` is set)
-});
 
 router.get('/api/v1/subject/all', function (req, res) {
   db.subject.findAll().then(function(data) {
@@ -317,4 +271,33 @@ router.get('/api/v1/subject/all', function (req, res) {
   }).catch(function(err) {
     res.status(400).json({ error: err })
   });
+});
+
+router.put('/api/v1/subject/update', function (req, res) {
+  db.subject.findAll().then(function(data) {
+    res.json(data);
+  }).catch(function(err) {
+    res.status(400).json({ error: err })
+  });
+});
+
+router.post('/api/v1/subject/update', function(req, res) {
+
+  // update statment
+  var sql = `UPDATE Subjects
+             SET subjectName = ?
+             WHERE subjectID = ?`;
+
+  var data = [req.body.newsubjectName, req.body.subjectID];
+
+  // execute the UPDATE statement
+  con.query(sql, data, (error, results) => {
+    if (error){
+      return console.error(error.message);
+    }
+    console.log('Rows affected:', results.affectedRows);
+    console.log(results);
+  });
+
+  res.redirect("/view")
 });
