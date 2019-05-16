@@ -6,6 +6,10 @@
   <title>{{title }}</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- <link href="bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet"> -->
+<!--
+  <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/css/bootstrap-editable.min.css"> -->
   {{#if ENV_DEVELOPMENT}}
     <script src="http://localhost:35729/livereload.js"></script>
   {{/if}}
@@ -14,11 +18,13 @@
   <script src='/external/angular/angular.min.js'></script>
   <script type="text/javascript">
       var app = angular.module("dashboard", []);
+      // var app1 = angular.module("app", ["xeditable"]);
       app.config(function($interpolateProvider) {
           $interpolateProvider.startSymbol('[[');
           $interpolateProvider.endSymbol(']]');
       });
   </script>
+
 </head>
 <body ng-app="dashboard">
 

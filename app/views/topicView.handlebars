@@ -1,0 +1,145 @@
+
+  <div ng-controller="topic1">
+      <h2 style= "text-align : center; margin-bottom:25px"> Topic List </h2>
+    <div class="row">
+      <div class='col-sm-12'>
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th class="text-center">
+                <input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" />
+              </th>
+              <th>Topic ID</th>
+              <th>Topic Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="top in topicList">
+              <td class="text-center">
+                <input type="checkbox" ng-model="top.selected" ng-change="setSelectedtopic(top)"/>
+              </td>
+              <td> [[top.topicId]] </td>
+              <td> [[top.topicName]] </td>
+              <!-- <td><xeditable ng-model="top.topicId" placeholder="Edit this topicID" title="Enter the topicID here" /></td>
+              <td><xeditable ng-model="top.topicName" placeholder="Edit this topicName" title="Enter a topic here" /></td> -->
+              <td><button class="btn btn-primary" ng-click="edit(top.topicId)" style='margin-right:25px'>Edit</button>
+                <button class="btn btn-danger" ng-click="delete(top.topicId)">Remove</button></td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <a class= "btn btn-primary" href= "/topic/add" style = "margin-bottom : 20px"> Add topic </a>
+    <br>
+    <a href ="/" > Go back </a>
+    </br>
+  </div>
+
+  <script>
+
+  app.controller("topic1", function($scope) {
+    $.get("/api/v1/topic/all",function(data){
+      $scope.topicList = data;
+      $scope.$apply();
+    });
+
+    $scope.delete = function(id) {
+      console.log(id);
+      $.get("/api/v1/topic/delete/"+id,function(data){
+        window.reload();
+      });
+    }
+
+    angular.module('plunker', ['ui.bootstrap']);
+
+
+function ListCtrl($scope, $dialog) {
+
+  var dialogOptions = {
+    controller: 'topic1',
+    templateUrl: 'topicEdit.html'
+  };
+
+  $scope.edit = function(sub){
+
+    var itemToEdit = sub;
+    console.log(sub);
+
+    $dialog.dialog(angular.extend(dialogOptions, {resolve: {sub: angular.copy(itemToEdit)}}))
+      .open()
+      .then(function(result) {
+        if(result) {
+          angular.copy(result, itemToEdit);
+        }
+        itemToEdit = undefined;
+    });
+  };
+}
+
+console.log("!");
+// the dialog is injected in the specified controller
+function EditCtrl($scope, sub, dialog){
+
+  $scope.sub = sub;
+
+  $scope.save = function() {
+    dialog.close($scope.sub);
+  };
+
+  $scope.close = function(){
+    dialog.close(undefined);
+  };
+}
+console.log("!njk");
+  });
+
+//   app.directive('xeditable', ['$timeout', function ($timeout) {
+//
+//   return {
+//     restrict: 'E',
+//
+//     require: 'ngModel',
+//
+//     scope: {
+//       ngModel: '=',
+//       placeholder: '@',
+//       title: '@'
+//     },
+//
+//     replace: true,
+//
+//     template: "<a class='editable' href='javascript:;' data-type='text' data-placement='right'>[[ngModel]]</a>",
+//
+//     link: function (scope, elem, attrs, ctrl) {
+//
+//       var loadXeditable = function () {
+//         angular.element(elem).editable({
+//           display: function (value, srcData) {
+//             ctrl.$setViewValue(value);
+//             scope.$apply();
+//           },
+//           success: function (response, newValue) {
+//             scope.ngModel = newValue;
+//             scope.$emit('top:updated', scope.$parent.top);
+//           },
+//           placeholder: scope.placeholder
+//         });
+//       }
+//
+//       $timeout(function () {
+//         loadXeditable();
+//       }, 10);
+//     }
+//   };
+//
+// }]);
+
+  </script>
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script> -->

@@ -25,5 +25,6 @@ db.Sequelize = Sequelize;
 
 db.subject = require("./subject")(sequelize, Sequelize);
 db.topic = require("./topic")(sequelize, Sequelize);
+db.question = require("./question")(sequelize, Sequelize);
 
 module.exports = db;

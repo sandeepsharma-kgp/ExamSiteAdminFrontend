@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
+const mongodb = require('../mongo-models');
 const mongoose = require('mongoose');
 const Subject = require('../models/subject');
 /* var Question = require('../models/questions'); */
@@ -14,9 +15,7 @@ var con = mysql.createConnection({
   password: "temp12345",
   database: "examsiteadminfrontend_development"
 });
-
-mongoose.connect('mongodb://localhost/examsiteadminfrontend_development');
-  console.log("Connection created!!");
+console.log("Connection created!!");
 
 
 module.exports = (app) => {
@@ -88,7 +87,7 @@ router.post('/subject/update', function(req, res) {
     console.log(results);
   });
 
-  res.redirect("/subject/read")
+  res.redirect("/subject/view")
 });
 
 router.get('/subject/search', function(req, res)
@@ -223,81 +222,135 @@ router.post('/topic/search', function(req, res) {
   });
   res.redirect("/topic/search");
 });
-/*
+
  router.get('/question/add', function (req, res)
 {
   res.render("questions");
 });
 
-router.post('/question/add', function (req, res)
+// router.post('/question/add', function (req, res)
+// {
+//   var question = new Question();
+//       question.questionID = req.body.quesID;
+//       question.questionName = req.body.ques;
+//       question.option1 = req.body.option1;
+//       question.option2 = req.body.option2;
+//       question.option3 = req.body.option3;
+//       question.option4 = req.body.option4;
+//       questiion.level = req.body.level;
+//       question.subject = req.body.subject;
+//       question.topic = req.body.topic;
+//       question.save();
+//       res.redirect('/question/add');
+// });
+
+router.post('/question/add', function(req, res)
 {
-  var question = new Question();
-      question.Id = req.body.quesID;
-      question.ques = req.body.ques;
-      question.option1 = req.body.option1;
-      question.option2 = req.body.option2;
-      question.option3 = req.body.option3;
-      question.option4 = req.body.option4;
-      questiion.level = req.body.level;
-      question.subject = req.body.subject;
-      question.topic = req.body.topic;
-      question.save();
-      res.redirect('/question/add');
+  res.render("questions", { successMessage2: "Question added successfully!!" });
+
+  var sqlQuery = "SELECT * FROM Questions WHERE questionID = ? LIMIT 1";
+  con.query(sqlQuery, [questionID], function(error, results){
+    // There was an issue with the query
+    if(error){
+      console.log(error);
+      return;
+    }
+
+    if(results.length){
+      // The username already exists
+      console.log("Id exists");
+
+    }else{
+      // The username wasn't found in the database
+      console.log("ID doesnt exist");
+      db.question.create({
+        questionID : req.body.questionID,
+        questionName : req.body.questionName,
+        option1 : req.body.option1,
+        option2 : req.body.option2,
+        option3 : req.body.option3,
+        option4 : req.body.option4,
+        level : req.body.level,
+        subject : req.body.subject,
+        topic : req.body.topic
+      });
+    }
+  });
+  res.redirect("question/view");
+
 });
-*/
-router.get('/view1', function (req, res)
+
+router.get('/subject/view', function (req, res)
 {
-
   var quer1 = "SELECT * FROM Subjects";
-
-   con.query(quer1, function(err, rows) {
-
-      if (err) {
-
-          console.log(err);
-
-      }
-
-            console.log(rows);
-            res.render("view1", {rows : rows});
+  con.query(quer1, function(err, rows) {
+  if (err) {
+    console.log(err);
+  }
+    console.log(rows);
+    res.render("subjectView");
     });
 
 });
 
+router.get('/topic/view', function (req, res)
+{
+  var quer2 = "SELECT * FROM Topics";
+  con.query(quer2, function(err, rows) {
+  if (err) {
+    console.log(err);
+  }
+    console.log(rows);
+    res.render("topicView");
+    });
+
+});
 
 router.get('/api/v1/subject/all', function (req, res) {
   db.subject.findAll().then(function(data) {
     res.json(data);
   }).catch(function(err) {
     res.status(400).json({ error: err })
+    return;
   });
 });
 
-router.put('/api/v1/subject/update', function (req, res) {
-  db.subject.findAll().then(function(data) {
+router.get('/api/v1/subject/delete/:id', function (req, res) {
+  var id = req.params.id;
+  db.subject.destroy({ where: {
+      subjectID: id //this will be your id that you want to delete
+   }}).then(function(rowDeleted){ // rowDeleted will return number of rows deleted
+      if(rowDeleted === 1){
+         console.log('Deleted successfully');
+       }
+       console.log(rowDeleted);
+    }, function(err){
+        console.log(err);
+        return;
+    });
+
+});
+
+router.get('/api/v1/topic/all', function (req, res) {
+  db.topic.findAll().then(function(data) {
     res.json(data);
   }).catch(function(err) {
-    res.status(400).json({ error: err })
+      res.status(400).json({ error: err })
   });
 });
 
-router.post('/api/v1/subject/update', function(req, res) {
+router.get('/api/v1/topic/delete/:id', function (req, res) {
+  var id = req.params.id;
+  db.topic.destroy({ where: {
+      topicId: id //this will be your id that you want to delete
+   }}).then(function(rowDeleted){ // rowDeleted will return number of rows deleted
+      if(rowDeleted === 1){
+         console.log('Deleted successfully');
+       }
+       console.log(rowDeleted);
+    }, function(err){
+        console.log(err);
+        return;
+    });
 
-  // update statment
-  var sql = `UPDATE Subjects
-             SET subjectName = ?
-             WHERE subjectID = ?`;
-
-  var data = [req.body.newsubjectName, req.body.subjectID];
-
-  // execute the UPDATE statement
-  con.query(sql, data, (error, results) => {
-    if (error){
-      return console.error(error.message);
-    }
-    console.log('Rows affected:', results.affectedRows);
-    console.log(results);
-  });
-
-  res.redirect("/view")
 });

@@ -1,0 +1,112 @@
+
+  <div ng-controller="subject1">
+      <h2 style= "text-align : center; margin-bottom:25px"> Subject List </h2>
+    <div class="row">
+      <div class='col-sm-12'>
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th class="text-center">
+                <input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" />
+              </th>
+              <th>Subject ID</th>
+              <th>Subject Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="sub in subjectList">
+              <td class="text-center">
+                <input type="checkbox" ng-model="subject.selected" ng-change="setSelectedSubject(subject)"/>
+              </td>
+              <td> [[sub.subjectID]] </td>
+              <td> [[sub.subjectName]] </td>
+          <!--     <td><xeditable ng-model="sub.subjectID" placeholder="Edit this subjectID" title="Enter the SubjectID here" /></td>
+              <td><xeditable ng-model="sub.subjectName" placeholder="Edit this subjectName" title="Enter a Subject here" /></td> -->
+              <td><button class="btn btn-primary" ng-click="myClickFunction($event)" style='margin-right:25px'>Edit</button>
+                <button class="btn btn-danger" ng-click="delete(sub.subjectID)">Remove</button>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <a class= "btn btn-primary" href= "/subject/add" style = "margin-bottom : 20px"> Add Subject </a>
+    <br>
+    <a href ="/" > Go back </a>
+    </br>
+
+  </div>
+
+  <!-- <script src="public\js\angularview.js"></script> -->
+
+  <script>
+
+  app.controller("subject1", function($scope) {
+    $scope.name = "@Checking";
+    getSubjects();
+    function getSubjects() {
+      $.get("/api/v1/subject/all",function(data){
+        $scope.subjectList = data;
+        $scope.$apply();
+      });
+    }
+
+    $scope.delete = function(id) {
+      console.log(id);
+      $.get("/api/v1/subject/delete/"+id,function(data){
+        window.reload();
+      });
+    }
+
+
+  });
+
+//   app.directive('xeditable', ['$timeout', function ($timeout) {
+//
+//   return {
+//     restrict: 'E',
+//
+//     require: 'ngModel',
+//
+//     scope: {
+//       ngModel: '=',
+//       placeholder: '@',
+//       title: '@'
+//     },
+//
+//     replace: true,
+//
+//     template: "<a class='editable' href='javascript:;' data-type='text' data-placement='right'>[[ngModel]]</a>",
+//
+//     link: function (scope, elem, attrs, ctrl) {
+//
+//       var loadXeditable = function () {
+//         angular.element(elem).editable({
+//           display: function (value, srcData) {
+//             ctrl.$setViewValue(value);
+//             scope.$apply();
+//           },
+//           success: function (response, newValue) {
+//             scope.ngModel = newValue;
+//             scope.$emit('sub:updated', scope.$parent.sub);
+//           },
+//           placeholder: scope.placeholder
+//         });
+//       }
+//
+//       $timeout(function () {
+//         loadXeditable();
+//       }, 10);
+//     }
+//   };
+//
+// }]);
+
+  </script>
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script> -->

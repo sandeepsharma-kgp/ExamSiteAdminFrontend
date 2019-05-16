@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   },
     subjectName: DataTypes.STRING,
   }, {
-    timestamps: false
+    timestamps: true
 }, {
     classMethods: {
       associate: (models) => {
