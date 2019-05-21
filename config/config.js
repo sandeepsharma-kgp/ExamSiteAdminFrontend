@@ -14,14 +14,14 @@ const config = {
 
   },
 
-  test: {
-    root: rootPath,
-    app: {
-      name: 'examsiteadminfrontend'
-    },
-    port: process.env.PORT || 3000,
-    db: 'mysql://localhost/examsiteadminfrontend-test'
-  },
+  // test: {
+  //   root: rootPath,
+  //   app: {
+  //     name: 'examsiteadminfrontend'
+  //   },
+  //   port: process.env.PORT || 3000,
+  //   db: 'mysql://localhost/examsiteadminfrontend-test'
+  // },
 
   production: {
     root: rootPath,
