@@ -4,8 +4,16 @@ const config = require('./config/config');
 const db = require('./app/models');
 
 const app = express();
-var mysql = require('mysql');
 
+var passport = require('passport'),
+session = require("express-session");
+app.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false})); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+require('./config/passport')(passport); // pass passport for configuration
+
+
+var mysql = require('mysql');
 var con = mysql.createConnection({
   host: "localhost",
   user: "Turbo",

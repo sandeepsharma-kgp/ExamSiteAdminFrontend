@@ -2,10 +2,43 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
+const config = require('../../config/config');
 const mongodb = require('../mongo-models');
 const mongoose = require('mongoose');
+const fs = require('fs');
+var multer = require('multer');
 const Subject = require('../models/subject');
-/* var Question = require('../models/questions'); */
+var Question = require('../mongo-models/index');
+var passport = require('passport');
+var flash    = require('connect-flash');
+var session = require('express-session');
+
+var crypto            = require('crypto');
+var LocalStrategy     = require('passport-local').Strategy;
+var Store             = require('express-session').Store;
+var BetterMemoryStore = require('session-memory-store')(session);
+
+var store = new BetterMemoryStore({ expires: 60 * 60 * 1000, debug: true });
+ router.use(session({
+    name: 'JSESSION',
+    secret: 'nitrkl',
+    store:  store,
+    resave: true,
+    saveUninitialized: true
+}));
+
+
+router.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false})); // session secret
+router.use(passport.initialize());
+router.use(passport.session()); // persistent login sessions
+require('../../config/passport')(passport);
+router.use(flash());
+
+mongoose.connect(config.mongodb);
+const mongo = mongoose.connection;
+mongo.on('error', () => {
+  throw new Error('unable to connect to database at ' + config.mongodb);
+});
 
 var mysql = require('mysql');
 
@@ -22,10 +55,94 @@ module.exports = (app) => {
   app.use('/', router);
 };
 
+// router.get('/login', function(req, res){
+//   if(req.query.register != "success")
+//     res.render('loginPage');
+//   else
+//     res.render('loginPage', { successMessage: "You have registered successfully" });
+// });
+//
+// router.post('/login', passport.authenticate('login', {
+// 	successRedirect : '/dashboard', // redirect to the secure profile section
+// 	failureRedirect : '/loginfailed', // redirect back to the signup page if there is an error
+// 	failureFlash : true // allow flash messages
+// }));
+
+// router.get('/loginfailed', function(req, res){
+// 	res.render('loginPage',{ errorMessage: req.flash('loginMessage') });
+// });
+
+router.get('/login', function(req, res){
+  res.render('loginPage',{'message' :req.flash('message')});
+});
+
+router.post("/login", passport.authenticate('login', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/login',
+    failureFlash: true
+}), function(req, res, info){
+    res.render('loginPage',{'message' :req.flash('message')});
+});
+
+function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated())
+    return next();
+  res.redirect('/login');
+}
+
+router.get('/dashboard', function(req, res){
+  console.log(req.user)
+	res.render('dashboard', {layout : "homeLayout"});
+});
+
+router.get('/logout', function(req, res) {
+	req.logout();
+	res.redirect('/');
+});
+
+router.get("/register", function(req, res){
+  res.render("registerPage");
+
+});
+router.post("/register", function(req, res){
+
+var sqlQuery = "SELECT * FROM Users WHERE email = ? LIMIT 1";
+con.query(sqlQuery, [email], function(error, results){
+  // There was an issue with the query
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  if(results.length){
+    // The username already exists
+    console.log("Id exists");
+
+  }else{
+    // The username wasn't found in the database
+    console.log("ID doesnt exist");
+    db.Users.create({
+      name:  req.body.name,
+      email: req.body.email,
+      password: req.body.password
+        });
+      }
+    });
+});
+
+router.get('/registerfailed', function(req, res){
+	res.render('registerPage',{ errorMessage: 'User already exists' });
+});
+
+function checkloginstate(req, res, next) {
+
+  if (!req.isAuthenticated()) {
+    res.redirect('/login');
+  }
+};
+
 router.get('/', function(req,res){
-
   res.render("home", {layout: "homeLayout" });
-
 });
 
 router.get('/subject/add', function(req, res)
@@ -61,6 +178,10 @@ con.query(sqlQuery, [subjectID], function(error, results){
     });
   }
 });
+});
+
+router.get('/question/view', function(req, res) {
+  res.render("questionView");
 });
 
 
@@ -225,59 +346,67 @@ router.post('/topic/search', function(req, res) {
 
  router.get('/question/add', function (req, res)
 {
-  res.render("questions");
+  res.render("questionInput");
 });
 
-// router.post('/question/add', function (req, res)
-// {
-//   var question = new Question();
-//       question.questionID = req.body.quesID;
-//       question.questionName = req.body.ques;
-//       question.option1 = req.body.option1;
-//       question.option2 = req.body.option2;
-//       question.option3 = req.body.option3;
-//       question.option4 = req.body.option4;
-//       questiion.level = req.body.level;
-//       question.subject = req.body.subject;
-//       question.topic = req.body.topic;
-//       question.save();
-//       res.redirect('/question/add');
-// });
+router.get('/api/v1/question/all', function (req, res) {
+  console.log('1');
+  Question.find(function(err, result) {
+    console.log('1');
+    console.log(err);
+   res.json(result);
+ })
+});
 
-router.post('/question/add', function(req, res)
+router.post('/question/add', function (req, res)
 {
-  res.render("questions", { successMessage2: "Question added successfully!!" });
+    console.log(req.files);
+      var question = new Question();
+      question.questionID = req.body.questionID;
+      question.questionName = req.body.questionName;
+      question.option1 = req.body.option1;
+      question.option2 = req.body.option2;
+      question.option3 = req.body.option3;
+      question.option4 = req.body.option4;
+      question.level = req.body.level;
+      question.subject = req.body.subject;
+      question.topic = req.body.topic;
+      question.uploadImage = fs.readFileSync(req.files.uploadImage.path)
+      question.save();
+      res.redirect('/question/add');
+});
 
-  var sqlQuery = "SELECT * FROM Questions WHERE questionID = ? LIMIT 1";
-  con.query(sqlQuery, [questionID], function(error, results){
-    // There was an issue with the query
-    if(error){
-      console.log(error);
-      return;
-    }
+router.get('/question/view/:id', function(req, res){
+	res.render('updateQuestion', {question: req.questionID});
+});
 
-    if(results.length){
-      // The username already exists
-      console.log("Id exists");
+router.put('/question/view/:id', function(req, res){
+	question.update({_id: req.params.questionID},
+	                   {
+			   	  questionID    : req.body.name,
+				    questionName  : req.body.age,
+            option1    : req.body.newoption1,
+            option2    : req.body.newoption2,
+            option3    : req.body.newoption3,
+            option4    : req.body.newoption4,
+            level    : req.body.level,
+            subject    : req.body.subject,
+            topic    : req.body.topic
+			   }, function(err, docs){
+			 	if(err) res.json(err);
+				else    res.redirect('/user/'+req.params.id);
+			 });
+});
 
-    }else{
-      // The username wasn't found in the database
-      console.log("ID doesnt exist");
-      db.question.create({
-        questionID : req.body.questionID,
-        questionName : req.body.questionName,
-        option1 : req.body.option1,
-        option2 : req.body.option2,
-        option3 : req.body.option3,
-        option4 : req.body.option4,
-        level : req.body.level,
-        subject : req.body.subject,
-        topic : req.body.topic
-      });
-    }
-  });
-  res.redirect("question/view");
-
+router.param('questionID', function(req, res, next, id){
+	question.findById(id, function(err, docs){
+			if(err) res.json(err);
+			else
+			{
+				req.questionID = docs;
+				next();
+			}
+		});
 });
 
 router.get('/subject/view', function (req, res)
@@ -343,6 +472,22 @@ router.get('/api/v1/topic/delete/:id', function (req, res) {
   var id = req.params.id;
   db.topic.destroy({ where: {
       topicId: id //this will be your id that you want to delete
+   }}).then(function(rowDeleted){ // rowDeleted will return number of rows deleted
+      if(rowDeleted === 1){
+         console.log('Deleted successfully');
+       }
+       console.log(rowDeleted);
+    }, function(err){
+        console.log(err);
+        return;
+    });
+
+});
+
+router.get('/api/v1/question/delete/:id', function (req, res) {
+  var id = req.params.id;
+  db.question.destroy({ where: {
+      questionID: id //this will be your id that you want to delete
    }}).then(function(rowDeleted){ // rowDeleted will return number of rows deleted
       if(rowDeleted === 1){
          console.log('Deleted successfully');

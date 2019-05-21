@@ -16,7 +16,7 @@
               <th>Option 3</th>
               <th>Option 4</th>
               <th>Level</th>
-              <th>question</th>
+              <th>Subject</th>
               <th>Topic</th>
               <th>Actions</th>
             </tr>
@@ -28,17 +28,17 @@
               </td>
               <td> [[ques.questionID]] </td>
               <td> [[ques.questionName]] </td>
-              <td> [[ques.Option1]] </td>
-              <td> [[ques.Option2]] </td>
-              <td> [[ques.Option3]] </td>
-              <td> [[ques.Option4]] </td>
+              <td> [[ques.option1]] </td>
+              <td> [[ques.option2]] </td>
+              <td> [[ques.option3]] </td>
+              <td> [[ques.option4]] </td>
               <td> [[ques.level]] </td>
               <td> [[ques.subject]] </td>
               <td> [[ques.topic]] </td>
 
           <!--     <td><xeditable ng-model="ques.questionID" placeholder="Edit this questionID" title="Enter the questionID here" /></td>
               <td><xeditable ng-model="ques.questionName" placeholder="Edit this questionName" title="Enter a question here" /></td> -->
-              <td><button class="btn btn-primary" ng-click="myClickFunction($event)" style='margin-right:25px'>Edit</button>
+              <td><button class="btn btn-primary" ng-click="edit(ques.questionID)" style='margin-right:25px'>Edit</button>
                 <button class="btn btn-danger" ng-click="delete(ques.questionID)">Remove</button>
               </td>
 
@@ -63,10 +63,14 @@
     $scope.name = "@Checking";
     getquestions();
     function getquestions() {
-      $.get("/api/v1/question/all",function(data){
-        $scope.questionList = data;
+      $.get("/api/v1/question/all",function(result){
+        $scope.questionList = result;
         $scope.$apply();
       });
+    }
+
+    $scope.edit = function(id) {
+
     }
 
     $scope.delete = function(id) {
