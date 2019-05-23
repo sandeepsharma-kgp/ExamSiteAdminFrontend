@@ -10,8 +10,8 @@ var mysql = require('mysql');
 
 var con = mysql.createConnection({
   host: "localhost",
-  user: "Turbo",
-  password: "temp12345",
+  user: "root",
+  password: "root",
   database: "examsiteadminfrontend_development"
 });
 console.log("Connection created!!");

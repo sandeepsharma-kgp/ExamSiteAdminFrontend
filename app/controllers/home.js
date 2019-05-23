@@ -7,6 +7,7 @@ const mongodb = require('../mongo-models');
 const mongoose = require('mongoose');
 const fs = require('fs');
 var multer = require('multer');
+const upload = multer();
 const Subject = require('../models/subject');
 var Question = require('../mongo-models/index');
 var passport = require('passport');
@@ -17,6 +18,7 @@ var crypto            = require('crypto');
 var LocalStrategy     = require('passport-local').Strategy;
 var Store             = require('express-session').Store;
 var BetterMemoryStore = require('session-memory-store')(session);
+var multipart = require('connect-multiparty');
 
 var store = new BetterMemoryStore({ expires: 60 * 60 * 1000, debug: true });
  router.use(session({
@@ -44,8 +46,8 @@ var mysql = require('mysql');
 
 var con = mysql.createConnection({
   host: "localhost",
-  user: "Turbo",
-  password: "temp12345",
+  user: "root",
+  password: "root",
   database: "examsiteadminfrontend_development"
 });
 console.log("Connection created!!");
@@ -358,22 +360,22 @@ router.get('/api/v1/question/all', function (req, res) {
  })
 });
 
-router.post('/question/add', function (req, res)
+router.post('/question/add',function (req, res)
 {
-    console.log(req.files);
-      var question = new Question();
-      question.questionID = req.body.questionID;
-      question.questionName = req.body.questionName;
-      question.option1 = req.body.option1;
-      question.option2 = req.body.option2;
-      question.option3 = req.body.option3;
-      question.option4 = req.body.option4;
-      question.level = req.body.level;
-      question.subject = req.body.subject;
-      question.topic = req.body.topic;
-      question.uploadImage = fs.readFileSync(req.files.uploadImage.path)
-      question.save();
-      res.redirect('/question/add');
+  question.uploadImage = fs.readFileSync(req.files.uploadImage.path);
+  console.log(req.files);
+  var question = new Question();
+  question.questionID = req.body.questionID;
+  question.questionName = req.body.questionName;
+  question.option1 = req.body.option1;
+  question.option2 = req.body.option2;
+  question.option3 = req.body.option3;
+  question.option4 = req.body.option4;
+  question.level = req.body.level;
+  question.subject = req.body.subject;
+  question.topic = req.body.topic;
+  question.save();
+  res.redirect('/question/add');
 });
 
 router.get('/question/view/:id', function(req, res){
