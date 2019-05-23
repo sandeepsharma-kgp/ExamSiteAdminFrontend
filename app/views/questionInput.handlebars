@@ -1,43 +1,43 @@
 <div class="container">
   <h1 style="text-align: center"> Add a question </h1>
-      <div class="form-group" style="width: 30%; margin: 25px auto">
-  <form action="/question/add" method="POST">
-    <div class="form-group">
-      <input type="text" class="form-control" name="questionID" placeholder="Question ID">
-    </div>
-    <div class="form-group">
-      <input type="text" class="form-control" name="questionName" placeholder="Question">
-    </div>
-    <div class="form-group">
-      <input type="text" class="form-control" name="option1" placeholder="Option1">
-    </div>
-    <div class="form-group">
-      <input type="text" class="form-control" name="option2" placeholder="Option2">
-    </div>
-    <div class="form-group">
-      <input type="text" class="form-control" name="option3" placeholder="Option3">
-    </div>
-    <div class="form-group">
-      <input type="text" class="form-control" name="option4" placeholder="Option4">
-    </div>
-    <div class="form-group">
-      <input type="text" class="form-control" name="level" placeholder="Level">
-    </div>
-    <div class="form-group">
-      <input type="text" class="form-control" name="subject" placeholder="Subject">
-    </div>
-    <div class="form-group">
-      <input type="text" class="form-control" name="topic" placeholder="Topic">
-    </div>
-    <div class="form-group">
-      <input type="file" class="form-control" name="uploadImage" placeholder="Upload">
-    </div>
-    <div class="form-group">
-      <a href= "/question/add">
-      <button type="submit"class="btn btn-primary btn-lg btn-block"> Submit </button>
-      </a>
-    </div>
-    <div class="form-group">
-    </div>
-    <a href= "/question/view"> Go back </a>
-  </form>
+  <div class="form-group" style="width: 30%; margin: 25px auto">
+    <form action="/question/add" method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <input type="text" class="form-control" name="questionID" placeholder="Question ID">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="questionName" placeholder="Question">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="option1" placeholder="Option1">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="option2" placeholder="Option2">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="option3" placeholder="Option3">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="option4" placeholder="Option4">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="level" placeholder="Level">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="subject" placeholder="Subject">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="topic" placeholder="Topic">
+      </div>
+      <div class="form-group">
+        <input type="file" class="form-control" name="uploadImage" placeholder="Upload">
+      </div>
+      <div class="form-group">
+        <a href="/question/add">
+          <button type="submit" class="btn btn-primary btn-lg btn-block"> Submit </button>
+        </a>
+      </div>
+      <div class="form-group">
+      </div>
+      <a href="/question/view"> Go back </a>
+    </form>

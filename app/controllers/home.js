@@ -7,7 +7,7 @@ const mongodb = require('../mongo-models');
 const mongoose = require('mongoose');
 const fs = require('fs');
 var multer = require('multer');
-const upload = multer();
+const upload = multer({dest: 'uploads/'});
 const Subject = require('../models/subject');
 var Question = require('../mongo-models/index');
 var passport = require('passport');
@@ -360,10 +360,11 @@ router.get('/api/v1/question/all', function (req, res) {
  })
 });
 
-router.post('/question/add',function (req, res)
+router.post('/question/add', upload.single('uploadImage'),function (req, res)
 {
-  question.uploadImage = fs.readFileSync(req.files.uploadImage.path);
-  console.log(req.files);
+  // question.uploadImage = fs.readFileSync(req.files.uploadImage.path); 
+  console.log(req.file);
+  console.log(req.body);
   var question = new Question();
   question.questionID = req.body.questionID;
   question.questionName = req.body.questionName;
