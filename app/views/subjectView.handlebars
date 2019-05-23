@@ -23,7 +23,7 @@
               <td> [[sub.subjectName]] </td>
           <!--     <td><xeditable ng-model="sub.subjectID" placeholder="Edit this subjectID" title="Enter the SubjectID here" /></td>
               <td><xeditable ng-model="sub.subjectName" placeholder="Edit this subjectName" title="Enter a Subject here" /></td> -->
-              <td><button class="btn btn-primary" ng-click="myClickFunction($event)" style='margin-right:25px'>Edit</button>
+              <td><button class="btn btn-primary" ng-click="myClickFunction($event)" style='margin-right:25px'> <a href="/subject/update/[[sub.subjectID]]">Edit </a></button>
                 <button class="btn btn-danger" ng-click="delete(sub.subjectID)">Remove</button>
               </td>
 
@@ -35,7 +35,7 @@
     </div>
     <a class= "btn btn-primary" href= "/subject/add" style = "margin-bottom : 20px"> Add Subject </a>
     <br>
-    <a href ="/" > Go back </a>
+    <a href ="/dashboard" > Go back </a>
     </br>
 
   </div>

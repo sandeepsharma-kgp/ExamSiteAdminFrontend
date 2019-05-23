@@ -3,7 +3,7 @@
       <div class="form-group" style="width: 30%; margin: 25px auto">
   <form action="/subject/update" method="POST">
     <div class="form-group">
-      <input type="text" class="form-control" name="newquestionID" placeholder="Subject ID">
+      <input type="text" class="form-control" name="newquestionID" placeholder="Subject ID" ng-model="test">
     </div>
     <div class="form-group">
       <input type="text" class="form-control" name="newquestionName" placeholder=" New Subject Name">
@@ -42,3 +42,5 @@
     {{successMessage}}
   </div>
 </br>
+<!-- $.getquestions
+$scope.test = qid; -->

@@ -72,16 +72,24 @@ module.exports = (app) => {
 // 	res.render('loginPage',{ errorMessage: req.flash('loginMessage') });
 // });
 
+// router.get('/login', function(req, res){
+//   res.render('loginPage',{'message' :req.flash('message')});
+// });
+
 router.get('/login', function(req, res){
-  res.render('loginPage',{'message' :req.flash('message')});
+  if(req.query.register != "success")
+    res.render('loginPage');
+  else
+    res.render('loginPage', { successMessage: "You have registered successfully" });
 });
+
 
 router.post("/login", passport.authenticate('login', {
     successRedirect: '/dashboard',
-    failureRedirect: '/login',
+    failureRedirect: '/loginfailed',
     failureFlash: true
 }), function(req, res, info){
-    res.render('loginPage',{'message' :req.flash('message')});
+    res.render('loginPage',{'message' : req.flash('message')});
 });
 
 function isAuthenticated(req, res, next) {
@@ -90,14 +98,18 @@ function isAuthenticated(req, res, next) {
   res.redirect('/login');
 }
 
+router.get('/loginfailed', function(req, res){
+	res.render('loginPage',{ errorMessage: req.flash('loginMessage') });
+});
+
 router.get('/dashboard', function(req, res){
   console.log(req.user)
-	res.render('dashboard', {layout : "homeLayout"});
+	res.render('dashboard', {layout : "homeLayout" , name: req.user.name });
 });
 
 router.get('/logout', function(req, res) {
 	req.logout();
-	res.redirect('/');
+	res.redirect('/login');
 });
 
 router.get("/register", function(req, res){
@@ -106,8 +118,9 @@ router.get("/register", function(req, res){
 });
 router.post("/register", function(req, res){
 
+email = req.body.email;
 var sqlQuery = "SELECT * FROM Users WHERE email = ? LIMIT 1";
-con.query(sqlQuery, [email], function(error, results){
+con.query(sqlQuery, req.body.email, function(error, results){
   // There was an issue with the query
   if(error){
     console.log(error);
@@ -117,15 +130,17 @@ con.query(sqlQuery, [email], function(error, results){
   if(results.length){
     // The username already exists
     console.log("Id exists");
+    res.redirect('/registerfailed');
 
   }else{
     // The username wasn't found in the database
     console.log("ID doesnt exist");
-    db.Users.create({
+    db.User.create({
       name:  req.body.name,
       email: req.body.email,
       password: req.body.password
         });
+        res.redirect('/login?register=success');
       }
     });
 });
@@ -145,13 +160,13 @@ router.get('/', function(req,res){
   res.render("home", {layout: "homeLayout" });
 });
 
-router.get('/subject/add', function(req, res)
+router.get('/subject/add',isAuthenticated , function(req, res)
 {
   res.render("subjectInput");
 
 });
 
-router.post('/subject/add', function(req, res)
+router.post('/subject/add',isAuthenticated , function(req, res)
 {
 
   res.render("subjectInput", { successMessage: "Subject added successfully!!" });
@@ -180,17 +195,28 @@ con.query(sqlQuery, [subjectID], function(error, results){
 });
 });
 
-router.get('/question/view', function(req, res) {
+router.get('/question/view',isAuthenticated , function(req, res) {
   res.render("questionView");
 });
 
 
-router.get('/subject/update', function(req, res) {
+router.get('/subject/update/:id' , function(req, res) {
   res.render("updateSubject");
 });
 
+router.get('/api/v1/subject/update/:id', function (req, res) {
 
-router.post('/subject/update', function(req, res) {
+  console.log(req.params.id);
+  db.subject.findAll({ where: {subjectId : req.params.id}}).then(function(data) {
+    // console.log(data);
+    res.json(data);
+  }).catch(function(err) {
+    res.status(400).json({ error: err })
+    return;
+  });
+});
+
+router.post('/subject/update',isAuthenticated , function(req, res) {
 
   // update statment
   var sql = `UPDATE Subjects
@@ -211,13 +237,36 @@ router.post('/subject/update', function(req, res) {
   res.redirect("/subject/view")
 });
 
-router.get('/subject/search', function(req, res)
+router.post('/api/subject/update' , function(req, res)
+{
+  data = req.body;
+  console.log(data);
+  var subject = [data.subjectID, data.subjectName, data.subjectID];
+  console.log(data.subjectID);
+  console.log(data.subjectName);
+  var sqlQuery = "UPDATE Subjects SET subjectID = ?, subjectName = ? WHERE subjectID = ?;";
+  con.query(sqlQuery, subject, function(error, results){
+    // There was an issue with the query
+    if(error){
+      console.log(error);
+      return;
+    }
+
+    if(results.length){
+      // The username already exists
+      console.log("Updated");
+    }
+  });
+  res.send("done");
+});
+
+router.get('/subject/search',isAuthenticated , function(req, res)
 {
   res.render("searchSubject");
 
 });
 
-router.post('/subject/search', function(req, res) {
+router.post('/subject/search',isAuthenticated , function(req, res) {
 
   // update statment
   var sql = `SELECT subjectName FROM  Subjects
@@ -234,13 +283,13 @@ router.post('/subject/search', function(req, res) {
 });
 
 
-router.get('/topic/add', function(req, res)
+router.get('/topic/add' , function(req, res)
 {
   res.render("topicInput");
 
 });
 
-router.post('/topic/add', function(req, res)
+router.post('/topic/add' , function(req, res)
 {
   var topicID= req.body.topicID;
   var topicName= req.body.topicName;
@@ -270,12 +319,24 @@ router.post('/topic/add', function(req, res)
 
 });
 
-router.get('/topic/update', function(req, res) {
+router.get('/topic/update/:id' , function(req, res) {
   res.render("updateTopic");
 });
 
+router.get('/api/v1/topic/update/:id', function (req, res) {
 
-router.post('/topic/update', function(req, res) {
+  console.log(req.params.id);
+  db.topic.findAll({ where: {topicId : req.params.id}}).then(function(data) {
+    // console.log(data);
+    res.json(data);
+  }).catch(function(err) {
+    res.status(400).json({ error: err })
+    return;
+  });
+});
+
+
+router.post('/topic/update' , function(req, res) {
 
   // update statment
   var sql = `UPDATE Topics
@@ -295,40 +356,36 @@ router.post('/topic/update', function(req, res) {
   });
 });
 
-
-router.get('/topic/update', function(req, res) {
-  res.render("updateTopic");
-});
-
-
-router.post('/topic/update', function(req, res) {
-
-  // update statment
-  var sql = `UPDATE Topics
-             SET topicName = ?
-             WHERE topicID = ?`;
-
-  var data = [req.body.newtopicName, req.body.topicID];
-
-  // execute the UPDATE statement
-  con.query(sql, data, (error, results) => {
-    if (error){
-      return console.error(error.message);
+router.post('/api/topic/update' , function(req, res)
+{
+  data = req.body;
+  console.log(data);
+  var topic = [data.topicId, data.topicName, data.topicId];
+  console.log(data.topicId);
+  console.log(data.topicName);
+  var sqlQuery = "UPDATE Topics SET topicId = ?, topicName = ? WHERE topicId = ?;";
+  con.query(sqlQuery, topic, function(error, results){
+    // There was an issue with the query
+    if(error){
+      console.log(error);
+      return;
     }
-    console.log('Rows affected:', results.affectedRows);
-    console.log(results);
-  });
 
+    if(results.length){
+      // The username already exists
+      console.log("Updated");
+    }
+  });
+  res.send("done");
 });
 
-
-router.get('/topic/search', function(req, res)
+router.get('/topic/search' , function(req, res)
 {
   res.render("searchTopic");
 
 });
 
-router.post('/topic/search', function(req, res) {
+router.post('/topic/search' , function(req, res) {
 
   // update statment
   var sql = `SELECT topicName FROM  Topics
@@ -344,7 +401,7 @@ router.post('/topic/search', function(req, res) {
   res.redirect("/topic/search");
 });
 
- router.get('/question/add', function (req, res)
+ router.get('/question/add',isAuthenticated , function (req, res)
 {
   res.render("questionInput");
 });
@@ -358,7 +415,7 @@ router.get('/api/v1/question/all', function (req, res) {
  })
 });
 
-router.post('/question/add', function (req, res)
+router.post('/question/add',isAuthenticated , function (req, res)
 {
     console.log(req.files);
       var question = new Question();
@@ -376,11 +433,11 @@ router.post('/question/add', function (req, res)
       res.redirect('/question/add');
 });
 
-router.get('/question/view/:id', function(req, res){
+router.get('/question/view/:id',isAuthenticated , function(req, res){
 	res.render('updateQuestion', {question: req.questionID});
 });
 
-router.put('/question/view/:id', function(req, res){
+router.put('/question/view/:id',isAuthenticated , function(req, res){
 	question.update({_id: req.params.questionID},
 	                   {
 			   	  questionID    : req.body.name,
@@ -398,7 +455,7 @@ router.put('/question/view/:id', function(req, res){
 			 });
 });
 
-router.param('questionID', function(req, res, next, id){
+router.param('questionID',isAuthenticated , function(req, res, next, id){
 	question.findById(id, function(err, docs){
 			if(err) res.json(err);
 			else
@@ -409,7 +466,7 @@ router.param('questionID', function(req, res, next, id){
 		});
 });
 
-router.get('/subject/view', function (req, res)
+router.get('/subject/view' , function (req, res)
 {
   var quer1 = "SELECT * FROM Subjects";
   con.query(quer1, function(err, rows) {
@@ -422,7 +479,7 @@ router.get('/subject/view', function (req, res)
 
 });
 
-router.get('/topic/view', function (req, res)
+router.get('/topic/view' , function (req, res)
 {
   var quer2 = "SELECT * FROM Topics";
   con.query(quer2, function(err, rows) {
@@ -435,7 +492,7 @@ router.get('/topic/view', function (req, res)
 
 });
 
-router.get('/api/v1/subject/all', function (req, res) {
+router.get('/api/v1/subject/all' , function (req, res) {
   db.subject.findAll().then(function(data) {
     res.json(data);
   }).catch(function(err) {
@@ -444,7 +501,7 @@ router.get('/api/v1/subject/all', function (req, res) {
   });
 });
 
-router.get('/api/v1/subject/delete/:id', function (req, res) {
+router.get('/api/v1/subject/delete/:id' , function (req, res) {
   var id = req.params.id;
   db.subject.destroy({ where: {
       subjectID: id //this will be your id that you want to delete

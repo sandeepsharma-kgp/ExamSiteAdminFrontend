@@ -27,13 +27,14 @@ passport.use('login', new LocalStrategy({
   function (req, email, password, done)
   {
       if(!email || !password )
-        return done(null, false, req.flash('message','All fields are required.'));
-      con.query("select * from Users where email = ?", [email], function(err, rows){
+        return done(null, false, req.flash('loginMessage','All fields are required.'));
+        var params = [email , password];
+      con.query("select * from Users where (email = ? AND password = ? )",params, function(err, rows){
           console.log(err); console.log(rows);
       if (err)
-        return done(req.flash('message',err));
+        return done(req.flash('loginMessage',err));
       if(!rows.length)
-        return done(null, false, req.flash('message','Invalid username or password.'));
+        return done(null, false, req.flash('loginMessage','Invalid username or password.'));
         return done(null, rows[0]);
       });
   }

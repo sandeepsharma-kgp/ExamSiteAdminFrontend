@@ -1,19 +1,19 @@
-<div class="container">
+<div class="container" ng-controller = "updateSubject">
   <h1 style="text-align: center"> Updating a subject </h1>
       <div class="form-group" style="width: 30%; margin: 25px auto">
   <form action="/subject/update" method="POST">
     <div class="form-group">
-      <input type="text" class="form-control" name="subjectID" placeholder="Subject ID">
+      <input type="text" class="form-control" name="subjectID" placeholder="Subject ID" ng-model = "subjectId">
     </div>
     <div class="form-group">
-      <input type="text" class="form-control" name="newsubjectName" placeholder=" New Subject Name">
+      <input type="text" class="form-control" name="subjectName" placeholder=" New Subject Name" ng-model = "subjectName">
     </div>
     <div class="form-group">
-      <button type="submit"class="btn btn-primary btn-lg btn-block"> Submit </button>
+      <button type="submit"class="btn btn-primary btn-lg btn-block" ng-model = "updateData"> Submit </button>
     </div>
-    <div class="form-group">
-    </div>
-    <a href= "/"> Go back </a>
+  </div>
+<div>
+      <a href= "/"> Go back </a>
   </form>
 
 <br>
@@ -21,3 +21,39 @@
     {{successMessage}}
   </div>
 </br>
+
+<script>
+
+  app.controller("updateSubject", function($scope) {
+    var url = window.location.href;
+    url = url.split("/");
+    $scope.subjectId = url[url.length - 1];
+    console.log($scope.subjectId);
+    $.get("/api/v1/subject/update/" + $scope.subjectId, function(data){
+        console.log(data);
+        if(data.length == 0) {
+
+        } else {
+          $scope.subjectList = data[0];
+          $scope.subjectId = $scope.subjectList.subjectID;
+          $scope.subjectName = $scope.subjectList.subjectName;
+          console.log($scope.subjectId);
+          console.log($scope.subjectName);
+          $scope.$apply();
+
+        }
+    });
+    $scope.updateData = function() {
+      console.log("!");
+      var data = {};
+      data.subjectID = $scope.subjectID;
+      data.subjectName = $scope.subjectName;
+      $.post("/api/subject/update",data, function(result){
+        console.log("Updated successfully");
+        });
+    }
+
+
+  });
+
+</script>

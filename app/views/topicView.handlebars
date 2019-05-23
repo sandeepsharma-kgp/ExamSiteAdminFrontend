@@ -23,7 +23,9 @@
               <td> [[top.topicName]] </td>
               <!-- <td><xeditable ng-model="top.topicId" placeholder="Edit this topicID" title="Enter the topicID here" /></td>
               <td><xeditable ng-model="top.topicName" placeholder="Edit this topicName" title="Enter a topic here" /></td> -->
-              <td><button class="btn btn-primary" ng-click="edit(top.topicId)" style='margin-right:25px'>Edit</button>
+
+                  <td><button class="btn btn-primary" ng-click="edit(top.topicId)" style='margin-right:25px'><a href="/topic/update/[[top.topicId]]" style="color: white">Edit </a> </button>
+
                 <button class="btn btn-danger" ng-click="delete(top.topicId)">Remove</button></td>
 
             </tr>
@@ -34,7 +36,7 @@
     </div>
     <a class= "btn btn-primary" href= "/topic/add" style = "margin-bottom : 20px"> Add topic </a>
     <br>
-    <a href ="/" > Go back </a>
+    <a href ="/dashboard" > Go back </a>
     </br>
   </div>
 
@@ -55,91 +57,5 @@
 
     angular.module('plunker', ['ui.bootstrap']);
 
-
-function ListCtrl($scope, $dialog) {
-
-  var dialogOptions = {
-    controller: 'topic1',
-    templateUrl: 'topicEdit.html'
-  };
-
-  $scope.edit = function(sub){
-
-    var itemToEdit = sub;
-    console.log(sub);
-
-    $dialog.dialog(angular.extend(dialogOptions, {resolve: {sub: angular.copy(itemToEdit)}}))
-      .open()
-      .then(function(result) {
-        if(result) {
-          angular.copy(result, itemToEdit);
-        }
-        itemToEdit = undefined;
-    });
-  };
-}
-
-console.log("!");
-// the dialog is injected in the specified controller
-function EditCtrl($scope, sub, dialog){
-
-  $scope.sub = sub;
-
-  $scope.save = function() {
-    dialog.close($scope.sub);
-  };
-
-  $scope.close = function(){
-    dialog.close(undefined);
-  };
-}
-console.log("!njk");
   });
-
-//   app.directive('xeditable', ['$timeout', function ($timeout) {
-//
-//   return {
-//     restrict: 'E',
-//
-//     require: 'ngModel',
-//
-//     scope: {
-//       ngModel: '=',
-//       placeholder: '@',
-//       title: '@'
-//     },
-//
-//     replace: true,
-//
-//     template: "<a class='editable' href='javascript:;' data-type='text' data-placement='right'>[[ngModel]]</a>",
-//
-//     link: function (scope, elem, attrs, ctrl) {
-//
-//       var loadXeditable = function () {
-//         angular.element(elem).editable({
-//           display: function (value, srcData) {
-//             ctrl.$setViewValue(value);
-//             scope.$apply();
-//           },
-//           success: function (response, newValue) {
-//             scope.ngModel = newValue;
-//             scope.$emit('top:updated', scope.$parent.top);
-//           },
-//           placeholder: scope.placeholder
-//         });
-//       }
-//
-//       $timeout(function () {
-//         loadXeditable();
-//       }, 10);
-//     }
-//   };
-//
-// }]);
-
   </script>
-  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/js/bootstrap-editable.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script> -->

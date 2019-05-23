@@ -38,7 +38,9 @@
 
           <!--     <td><xeditable ng-model="ques.questionID" placeholder="Edit this questionID" title="Enter the questionID here" /></td>
               <td><xeditable ng-model="ques.questionName" placeholder="Edit this questionName" title="Enter a question here" /></td> -->
+              <a href = "/question/update/">
               <td><button class="btn btn-primary" ng-click="edit(ques.questionID)" style='margin-right:25px'>Edit</button>
+              </a>
                 <button class="btn btn-danger" ng-click="delete(ques.questionID)">Remove</button>
               </td>
 
@@ -50,7 +52,7 @@
     </div>
     <a class= "btn btn-primary" href= "/question/add" style = "margin-bottom : 20px"> Add question </a>
     <br>
-    <a href ="/" > Go back </a>
+    <a href ="/dashboard" > Go back </a>
     </br>
 
   </div>

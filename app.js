@@ -7,7 +7,7 @@ const app = express();
 
 var passport = require('passport'),
 session = require("express-session");
-app.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false})); // session secret
+app.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false, cookie: { maxAge : 60000}})); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 require('./config/passport')(passport); // pass passport for configuration

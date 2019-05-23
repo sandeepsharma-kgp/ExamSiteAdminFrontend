@@ -1,23 +1,61 @@
-<div class="container">
+<div class="container" ng-controller = "update">
   <h1 style="text-align: center"> Updating a topic </h1>
       <div class="form-group" style="width: 30%; margin: 25px auto">
-  <form action="/topic/update" method="POST">
+  <form>
     <div class="form-group">
-      <input type="text" class="form-control" name="topicID" placeholder="Topic ID">
+      <input type="text" class="form-control" name="topicID" placeholder="Topic ID" ng-model="topicId">
     </div>
     <div class="form-group">
-      <input type="text" class="form-control" name="newtopicName" placeholder=" Topic Name">
+      <input type="text" class="form-control" name="newtopicName" placeholder=" Topic Name" ng-model= "topicName">
     </div>
     <div class="form-group">
-      <button type="submit"class="btn btn-primary btn-lg btn-block"> Submit </button>
+      <button type="submit"class="btn btn-primary btn-lg btn-block" ng-click = "updateData()"> <a href = "/topic/view"> Submit </a> </button>
     </div>
     <div class="form-group">
     </div>
-    <a href= "/"> Go back </a>
+    <a href= "/dashboard"> Go back </a>
   </form>
+  </div>
+</div>
 
 <br>
   <div class="alert alert-success" role="alert">
     {{successMessage}}
   </div>
 </br>
+
+
+<script>
+
+  app.controller("update", function($scope) {
+    var url = window.location.href;
+    url = url.split("/");
+    $scope.topicId = url[url.length - 1];
+    console.log($scope.topicId);
+    $.get("/api/v1/topic/update/" + $scope.topicId, function(data){
+        console.log(data);
+        if(data.length == 0) {
+
+        } else {
+          $scope.topicList = data[0];
+          $scope.topicId = $scope.topicList.topicId;
+          $scope.topicName = $scope.topicList.topicName;
+          console.log($scope.topicId);
+          console.log($scope.topicName);
+          $scope.$apply();
+
+        }
+      });
+      $scope.updateData = function() {
+        console.log("!");
+        var data = {};
+        data.topicId = $scope.topicId;
+        data.topicName = $scope.topicName;
+        $.post("/api/topic/update",data, function(result){
+          console.log("Updated successfully");
+          });
+      }
+
+});
+
+</script>
