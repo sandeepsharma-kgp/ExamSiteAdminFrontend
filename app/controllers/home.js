@@ -360,10 +360,11 @@ router.get('/api/v1/question/all', function (req, res) {
  })
 });
 
-router.post('/question/add', upload.single('uploadImage'),function (req, res)
+router.post('/question/add', upload.array('uploadImage',12),function (req, res)
 {
-  // question.uploadImage = fs.readFileSync(req.files.uploadImage.path); 
+  // question.uploadImage = fs.readFileSync(req.files[0].uploadImage.path); 
   console.log(req.file);
+  console.log(req.files[0].path);
   console.log(req.body);
   var question = new Question();
   question.questionID = req.body.questionID;
