@@ -2,34 +2,16 @@
 const express = require('express');
 const config = require('./config/config');
 const db = require('./app/models');
+var con = require('./config/db')
 
 const app = express();
 
 var passport = require('passport'),
 session = require("express-session");
-app.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false, cookie: { maxAge : 60000}})); // session secret
+app.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false, cookie: { maxAge : 6000000}})); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 require('./config/passport')(passport); // pass passport for configuration
-
-
-var mysql = require('mysql');
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "Turbo",
-  password: "temp12345",
-  database: "examsiteadminfrontend_development"
-});
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-  // var sql = "CREATE TABLE subjects (subjectID VARCHAR(255), subjectName VARCHAR(255))";
-  // con.query(sql, function (err, result) {
-  //   if (err) throw err;
-  //   console.log("Table created");
-  // });
-
-});
 
 module.exports = require('./config/express')(app, config);
 

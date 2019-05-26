@@ -11,6 +11,8 @@
               </th>
               <th>Subject ID</th>
               <th>Subject Name</th>
+              <th>Class</th>
+              <th>Board</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -19,12 +21,12 @@
               <td class="text-center">
                 <input type="checkbox" ng-model="subject.selected" ng-change="setSelectedSubject(subject)"/>
               </td>
-              <td> [[sub.subjectID]] </td>
+              <td> [[sub.SID]] </td>
               <td> [[sub.subjectName]] </td>
-          <!--     <td><xeditable ng-model="sub.subjectID" placeholder="Edit this subjectID" title="Enter the SubjectID here" /></td>
-              <td><xeditable ng-model="sub.subjectName" placeholder="Edit this subjectName" title="Enter a Subject here" /></td> -->
-              <td><button class="btn btn-primary" ng-click="myClickFunction($event)" style='margin-right:25px'> <a href="/subject/update/[[sub.subjectID]]">Edit </a></button>
-                <button class="btn btn-danger" ng-click="delete(sub.subjectID)">Remove</button>
+              <td> [[sub.class]] </td>
+              <td> [[sub.board]] </td>
+              <td>  <a href="/subject/update/[[sub.SID]]" class="btn btn-primary" style='margin-right:25px'>Edit</a>
+                <button class="btn btn-danger" ng-click="delete(sub.SID)">Remove</button>
               </td>
 
             </tr>
@@ -33,7 +35,7 @@
       </div>
 
     </div>
-    <a class= "btn btn-primary" href= "/subject/add" style = "margin-bottom : 20px"> Add Subject </a>
+    <a class= "btn btn-primary" href= "/subject/add" style = "margin-bottom : 20px; margin-top : 20px"> Add Subject </a>
     <br>
     <a href ="/dashboard" > Go back </a>
     </br>
@@ -49,6 +51,7 @@
     getSubjects();
     function getSubjects() {
       $.get("/api/v1/subject/all",function(data){
+        console.log(data);
         $scope.subjectList = data;
         $scope.$apply();
       });
@@ -57,56 +60,10 @@
     $scope.delete = function(id) {
       console.log(id);
       $.get("/api/v1/subject/delete/"+id,function(data){
-        window.reload();
+        window.location.reload(true);
       });
     }
 
 
   });
-
-//   app.directive('xeditable', ['$timeout', function ($timeout) {
-//
-//   return {
-//     restrict: 'E',
-//
-//     require: 'ngModel',
-//
-//     scope: {
-//       ngModel: '=',
-//       placeholder: '@',
-//       title: '@'
-//     },
-//
-//     replace: true,
-//
-//     template: "<a class='editable' href='javascript:;' data-type='text' data-placement='right'>[[ngModel]]</a>",
-//
-//     link: function (scope, elem, attrs, ctrl) {
-//
-//       var loadXeditable = function () {
-//         angular.element(elem).editable({
-//           display: function (value, srcData) {
-//             ctrl.$setViewValue(value);
-//             scope.$apply();
-//           },
-//           success: function (response, newValue) {
-//             scope.ngModel = newValue;
-//             scope.$emit('sub:updated', scope.$parent.sub);
-//           },
-//           placeholder: scope.placeholder
-//         });
-//       }
-//
-//       $timeout(function () {
-//         loadXeditable();
-//       }, 10);
-//     }
-//   };
-//
-// }]);
-
   </script>
-  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/js/bootstrap-editable.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script> -->

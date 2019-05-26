@@ -32,6 +32,14 @@
     <div class="form-group">
       <input type="file" class="form-control" name="uploadImage" placeholder="Upload">
     </div>
+    <div class="dropdown">
+      <select name="Classes" id="Classes">
+       <option value="8">8</option>
+       <option value="9">9</option>
+       <option value="10">10</option>
+   </select>
+
+</div>
     <div class="form-group">
       <a href= "/question/add">
       <button type="submit"class="btn btn-primary btn-lg btn-block"> Submit </button>
@@ -41,3 +49,18 @@
     </div>
     <a href= "/question/view"> Go back </a>
   </form>
+
+  <script>
+  var selected_index = oForm.elements["selClass"].selectedIndex;
+
+if(selected_index > 0)
+{
+   var selected_option_value = oForm.elements["selClass"].options[selected_index].value;
+   var selected_option_text = oForm.elements["selClass"].options[selected_index].text;
+   console.log(var selected_option_value);
+}
+else
+{
+   alert('Please select a country from the drop down list');
+}
+</script>

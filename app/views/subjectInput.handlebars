@@ -2,12 +2,26 @@
   <h1 style="text-align: center"> Add a subject </h1>
       <div class="form-group" style="width: 30%; margin: 25px auto">
   <form action="/subject/add" method="POST">
-    <div class="form-group">
+    <!-- <div class="form-group">
       <input type="text" class="form-control" name="subjectID" placeholder="Subject ID">
-    </div>
+    </div> -->
     <div class="form-group">
       <input type="text" class="form-control" name="subjectName" placeholder="Subject Name">
     </div>
+    <select name="class" id="class" style = "margin-bottom: 15px">
+     <option value="08">08</option>
+     <option value="09">09</option>
+     <option value="10">10</option>
+     <option value="11">11</option>
+     <option value="12">12</option>
+   </select>
+   <select name="board" id="board">
+    <option value="CBSE">CBSE</option>
+    <option value="ICSE">ICSE</option>
+    <option value="JEEM">JEEMains</option>
+    <option value="JEEA">JEEAdvanced</option>
+    <option value="NEET">NEET</option>
+  </select>
     <div class="form-group">
       <button type="submit"class="btn btn-primary btn-lg btn-block"> Submit </button>
     </div>
@@ -17,7 +31,29 @@
   </form>
 
 <br>
-  <div class="alert alert-success" role="alert">
+{{#if errorMessage}}
+<div class="alert alert-danger" role="alert" style=" width: 30%; margin: 25px auto">
+    {{errorMessage}}
+{{/if}}
+</div>
+{{#if successMessage}}
+<div class="alert alert-success" role="alert" style=" width: 30%; margin: 25px auto">
     {{successMessage}}
-  </div>
+</div>
+{{/if}}
 </br>
+
+<script>
+var selected_index = oForm.elements["selClass"].selectedIndex;
+
+if(selected_index > 0)
+{
+ var selected_option_value = oForm.elements["selClass"].options[selected_index].value;
+ var selected_option_text = oForm.elements["selClass"].options[selected_index].text;
+ console.log(var selected_option_value);
+}
+else
+{
+ alert('Please select a class from the drop down list');
+}
+</script>

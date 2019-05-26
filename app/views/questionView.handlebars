@@ -35,11 +35,7 @@
               <td> [[ques.level]] </td>
               <td> [[ques.subject]] </td>
               <td> [[ques.topic]] </td>
-
-          <!--     <td><xeditable ng-model="ques.questionID" placeholder="Edit this questionID" title="Enter the questionID here" /></td>
-              <td><xeditable ng-model="ques.questionName" placeholder="Edit this questionName" title="Enter a question here" /></td> -->
-              <a href = "/question/update/">
-              <td><button class="btn btn-primary" ng-click="edit(ques.questionID)" style='margin-right:25px'>Edit</button>
+              <td><a class="btn btn-primary" href="/question/update/[[ques.questionID]]" style='margin-right:25px'>Edit</a>
               </a>
                 <button class="btn btn-danger" ng-click="delete(ques.questionID)">Remove</button>
               </td>
@@ -57,8 +53,6 @@
 
   </div>
 
-  <!-- <script src="public\js\angularview.js"></script> -->
-
   <script>
 
   app.controller("question", function($scope) {
@@ -71,63 +65,12 @@
       });
     }
 
-    $scope.edit = function(id) {
-
-    }
-
     $scope.delete = function(id) {
       console.log(id);
       $.get("/api/v1/question/delete/"+id,function(data){
         window.reload();
       });
     }
-
-
   });
 
-//   app.directive('xeditable', ['$timeout', function ($timeout) {
-//
-//   return {
-//     restrict: 'E',
-//
-//     require: 'ngModel',
-//
-//     scope: {
-//       ngModel: '=',
-//       placeholder: '@',
-//       title: '@'
-//     },
-//
-//     replace: true,
-//
-//     template: "<a class='editable' href='javascript:;' data-type='text' data-placement='right'>[[ngModel]]</a>",
-//
-//     link: function (scope, elem, attrs, ctrl) {
-//
-//       var loadXeditable = function () {
-//         angular.element(elem).editable({
-//           display: function (value, srcData) {
-//             ctrl.$setViewValue(value);
-//             scope.$apply();
-//           },
-//           success: function (response, newValue) {
-//             scope.ngModel = newValue;
-//             scope.$emit('ques:updated', scope.$parent.ques);
-//           },
-//           placeholder: scope.placeholder
-//         });
-//       }
-//
-//       $timeout(function () {
-//         loadXeditable();
-//       }, 10);
-//     }
-//   };
-//
-// }]);
-
   </script>
-  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/js/bootstrap-editable.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script> -->

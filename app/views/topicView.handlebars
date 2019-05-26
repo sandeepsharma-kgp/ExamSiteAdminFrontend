@@ -11,6 +11,7 @@
               </th>
               <th>Topic ID</th>
               <th>Topic Name</th>
+              <th>Subject ID</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -21,12 +22,9 @@
               </td>
               <td> [[top.topicId]] </td>
               <td> [[top.topicName]] </td>
-              <!-- <td><xeditable ng-model="top.topicId" placeholder="Edit this topicID" title="Enter the topicID here" /></td>
-              <td><xeditable ng-model="top.topicName" placeholder="Edit this topicName" title="Enter a topic here" /></td> -->
-
-                  <td><button class="btn btn-primary" ng-click="edit(top.topicId)" style='margin-right:25px'><a href="/topic/update/[[top.topicId]]" style="color: white">Edit </a> </button>
-
-                <button class="btn btn-danger" ng-click="delete(top.topicId)">Remove</button></td>
+              <td> [[top.SID]] </td>
+              <td>  <a href="/topic/update/[[top.topicId]]" class="btn btn-primary" style='margin-right:25px'>Edit</a>
+              <button class="btn btn-danger" ng-click="delete(top.topicId)">Remove</button></td>
 
             </tr>
           </tbody>

@@ -1,21 +1,11 @@
 // config/passport.js
 var passport=require('passport');
+var con = require('./db')
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
 
 // load up the user model
 var User          = require('../app/models/user');
-
-var mysql = require('mysql');
-
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "Turbo",
-  password: "temp12345",
-  database: "examsiteadminfrontend_development"
-});
-console.log("Connection created!!");
-
 
 module.exports = function(passport) {
 
