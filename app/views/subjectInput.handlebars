@@ -1,21 +1,18 @@
-<div class="container">
+<div class="container" ng-controller = "subjectInput">
   <h1 style="text-align: center"> Add a subject </h1>
       <div class="form-group" style="width: 30%; margin: 25px auto">
-  <form action="/subject/add" method="POST">
-    <!-- <div class="form-group">
-      <input type="text" class="form-control" name="subjectID" placeholder="Subject ID">
-    </div> -->
+  <form method="POST">
     <div class="form-group">
-      <input type="text" class="form-control" name="subjectName" placeholder="Subject Name">
+      <input type="text" class="form-control" name="subjectName" placeholder="Subject Name" ng-model = "subjectName">
     </div>
-    <select name="class" id="class" style = "margin-bottom: 15px">
+    <select name="class" id="class" style = "margin-bottom: 15px" ng-model = "class">
      <option value="08">08</option>
      <option value="09">09</option>
      <option value="10">10</option>
      <option value="11">11</option>
      <option value="12">12</option>
    </select>
-   <select name="board" id="board">
+   <select name="board" id="board" ng-model = "board">
     <option value="CBSE">CBSE</option>
     <option value="ICSE">ICSE</option>
     <option value="JEEM">JEEMains</option>
@@ -23,10 +20,10 @@
     <option value="NEET">NEET</option>
   </select>
     <div class="form-group">
-      <button type="submit"class="btn btn-primary btn-lg btn-block"> Submit </button>
+      <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click = "add()"> Submit </button>
     </div>
-    <div class="form-group">
-    </div>
+  </div>
+</div>
     <a href= "/subject/view"> Go back </a>
   </form>
 
@@ -44,16 +41,32 @@
 </br>
 
 <script>
-var selected_index = oForm.elements["selClass"].selectedIndex;
+// var selected_index = oForm.elements["selClass"].selectedIndex;
+//
+// if(selected_index > 0)
+// {
+//  var selected_option_value = oForm.elements["selClass"].options[selected_index].value;
+//  var selected_option_text = oForm.elements["selClass"].options[selected_index].text;
+//  console.log(var selected_option_value);
+// }
+// else
+// {
+//  alert('Please select a class from the drop down list');
+// }
 
-if(selected_index > 0)
-{
- var selected_option_value = oForm.elements["selClass"].options[selected_index].value;
- var selected_option_text = oForm.elements["selClass"].options[selected_index].text;
- console.log(var selected_option_value);
-}
-else
-{
- alert('Please select a class from the drop down list');
-}
+
+  app.controller("subjectInput", function($scope) {
+
+    $scope.add = function() {
+      console.log("!");
+      var data = {};
+      data.board = $scope.board;
+      data.class = $scope.class;
+      data.subjectName = $scope.subjectName;
+      $.post("/api/v1/subject/add",data, function(result){
+        console.log("Added successfully");
+        });
+      }
+  });
+
 </script>

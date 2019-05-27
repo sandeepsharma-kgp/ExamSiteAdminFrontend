@@ -51,7 +51,7 @@
     getSubjects();
     function getSubjects() {
       $.get("/api/v1/subject/all",function(data){
-        console.log(data);
+        // console.log(data);
         $scope.subjectList = data;
         $scope.$apply();
       });
