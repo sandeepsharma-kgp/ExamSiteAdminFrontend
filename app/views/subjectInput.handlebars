@@ -27,19 +27,6 @@
     <a href= "/subject/view"> Go back </a>
   </form>
 
-<br>
-{{#if errorMessage}}
-<div class="alert alert-danger" role="alert" style=" width: 30%; margin: 25px auto">
-    {{errorMessage}}
-{{/if}}
-</div>
-{{#if successMessage}}
-<div class="alert alert-success" role="alert" style=" width: 30%; margin: 25px auto">
-    {{successMessage}}
-</div>
-{{/if}}
-</br>
-
 <script>
 // var selected_index = oForm.elements["selClass"].selectedIndex;
 //
@@ -70,3 +57,16 @@
   });
 
 </script>
+
+<br>
+{{#if errorMessage}}
+<div class="alert alert-danger" role="alert" style=" width: 30%; margin: 25px auto">
+    {{errorMessage}}
+{{/if}}
+</div>
+{{#if successMessage}}
+<div class="alert alert-success" role="alert" style=" width: 30%; margin: 25px auto">
+    {{successMessage}}
+</div>
+{{/if}}
+</br>

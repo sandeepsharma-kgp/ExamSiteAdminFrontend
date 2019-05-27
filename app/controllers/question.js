@@ -13,7 +13,30 @@ var Question = require('../mongo-models/index');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var session = require('express-session');
-var upload = multer({dest: 'uploads/'});
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null , './uploads/');
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const fileFilter = function(req,file,cb) {
+  if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png')
+  cb(null, true);
+  else {
+    cb(console.log("Unsupported format"), false);
+  }
+}
+
+var upload = multer({
+  storage: storage,
+  limits : {fileSize: 1024*1024*5},
+  fileFilter : fileFilter
+});
+
 
 var crypto            = require('crypto');
 var LocalStrategy     = require('passport-local').Strategy;
@@ -58,9 +81,10 @@ router.get("/question/view", function(req, res){
 
 router.post('/question/add', upload.array('uploadImage',12), function (req, res)
 {
-      console.log(req.files.uploadImage.path);
+      console.log(req.files);
       // console.log(req.files[0].path);
       var question = new Question();
+      question.uploadImage = req.files.path;
       question.questionID = req.body.questionID;
       question.questionName = req.body.questionName;
       question.option1 = req.body.option1;

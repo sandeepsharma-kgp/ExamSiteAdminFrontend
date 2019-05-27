@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "driver": "mysql",
+    "host": "localhost",
+    "port": "3300",
+    "user": "Turbo",
+    "password": "temp12345",
+    "database": "examsiteadminfrontend_development"
+  }
+}

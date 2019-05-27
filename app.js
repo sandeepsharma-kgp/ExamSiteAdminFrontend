@@ -12,6 +12,7 @@ app.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false, coo
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 require('./config/passport')(passport); // pass passport for configuration
+app.use('/uploads', express.static('uploads'));
 
 module.exports = require('./config/express')(app, config);
 
