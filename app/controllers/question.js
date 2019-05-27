@@ -84,7 +84,6 @@ router.post('/question/add', upload.array('uploadImage',12), function (req, res)
       console.log(req.files);
       // console.log(req.files[0].path);
       var question = new Question();
-      question.uploadImage = req.files.path;
       question.questionID = req.body.questionID;
       question.questionName = req.body.questionName;
       question.option1 = req.body.option1;
@@ -94,7 +93,9 @@ router.post('/question/add', upload.array('uploadImage',12), function (req, res)
       question.level = req.body.level;
       question.subject = req.body.subject;
       question.topic = req.body.topic;
+      question.Image = req.files[0].path;
       question.save();
+      console.log(req.files[0].fieldname);
       res.redirect('/question/add');
 });
 

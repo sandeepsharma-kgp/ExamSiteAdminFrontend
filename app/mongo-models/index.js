@@ -11,7 +11,7 @@ const QuestionSchema = new Schema({
   level : String,
   subject : String,
   topic : String,
-  uploadImage :{ data: Buffer, contentType: String }
+  Image : String,
 
 }, {
     "freezeTableName": true
