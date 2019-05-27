@@ -13,6 +13,7 @@ var Question = require('../mongo-models/index');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var session = require('express-session');
+var upload = multer({dest: 'uploads/'});
 
 var crypto            = require('crypto');
 var LocalStrategy     = require('passport-local').Strategy;
@@ -55,9 +56,10 @@ router.get("/question/view", function(req, res){
   res.render("questionInput");
 });
 
-router.post('/question/add', function (req, res)
+router.post('/question/add', upload.array('uploadImage',12), function (req, res)
 {
-    console.log(req.files);
+      console.log(req.files.uploadImage.path);
+      // console.log(req.files[0].path);
       var question = new Question();
       question.questionID = req.body.questionID;
       question.questionName = req.body.questionName;
@@ -68,7 +70,6 @@ router.post('/question/add', function (req, res)
       question.level = req.body.level;
       question.subject = req.body.subject;
       question.topic = req.body.topic;
-      question.uploadImage = req.files.uploadImage.path
       question.save();
       res.redirect('/question/add');
 });
