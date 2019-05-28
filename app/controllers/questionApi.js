@@ -69,6 +69,27 @@ router.post('/api/question/update' , function(req, res)
   res.send("done");
 });
 
+router.post('/api/question/verify' , function(req, res)
+{
+  data = req.body;
+  console.log(data);
+  Question.update({questionID: req.body.questionID}, {
+    $set:{ questionID : req.body.questionID,
+    questionName : req.body.questionName,
+    option1 :req.body.option1,
+    option2 : req.body.option2,
+    option3 : req.body.option3,
+    option4 : req.body.option4,
+    level : req.body.level,
+    subject : req.body.subject,
+    topic : req.body.topic,
+    status : req.body.status    }}, function(err, result) {
+      if (err)
+          return err;
+      });
+  res.send("done");
+});
+
 router.get('/api/v1/question/delete/:id', function (req, res) {
   var id = req.params.id;
   Question.deleteOne({"questionID": id}, (err, results) => {

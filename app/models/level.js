@@ -1,12 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
 
-  const Topic = sequelize.define('Topic', {
-  topicId: {
+  const Level = sequelize.define('Level', {
+  ID: {
      type: DataTypes.STRING ,
      primaryKey: true,
   },
-  topicName: DataTypes.STRING,
-  SID: DataTypes.STRING
+  Type: DataTypes.STRING,
   }, {
     timestamps: true
 }, {
@@ -18,5 +17,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
 
-  return Topic;
+  return Level;
 };

@@ -1,12 +1,14 @@
+// Example model
+
+
 module.exports = (sequelize, DataTypes) => {
 
-  const Topic = sequelize.define('Topic', {
-  topicId: {
-     type: DataTypes.STRING ,
-     primaryKey: true,
-  },
-  topicName: DataTypes.STRING,
-  SID: DataTypes.STRING
+  const UniqueSubject = sequelize.define('UniqueSubject', {
+  // subjectID: {
+  //    type: DataTypes.STRING ,
+  //    primaryKey: true,
+  // },
+    subjectName: DataTypes.STRING
   }, {
     timestamps: true
 }, {
@@ -18,5 +20,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
 
-  return Topic;
+  return UniqueSubject;
 };

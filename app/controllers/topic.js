@@ -56,6 +56,17 @@ router.post('/topic/add' , function(req, res)
 {
   var topicID= req.body.topicID;
   var topicName= req.body.topicName;
+  console.log(req.body.board);
+  console.log(req.body.class);
+  console.log(req.body.subject);
+  var boardInitials = req.body.board.substring(0,4);
+  console.log(boardInitials);
+  var new2 = boardInitials.concat(req.body.class);
+  var new4 = req.body.subject.substring(0,4);
+  var new5 = new4.toUpperCase();
+  console.log(new5);
+  var new3 = new2.concat(new5);
+  console.log(new3);
 
   var sqlQuery = "SELECT * FROM Topics WHERE topicID = ? LIMIT 1";
   con.query(sqlQuery, [topicID], function(error, results){
@@ -75,7 +86,7 @@ router.post('/topic/add' , function(req, res)
       console.log("ID doesnt exist");
       db.topic.create({
         topicId: req.body.topicID,
-        topicName: req.body.topicName,
+        topicName: req.body.topicName
       });
         res.render("topicInput", { successMessage: "Topic added successfully!!" });
     }

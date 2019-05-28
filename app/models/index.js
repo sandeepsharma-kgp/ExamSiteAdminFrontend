@@ -24,7 +24,9 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.subject = require("./subject")(sequelize, Sequelize);
+db.uniqueSubject = require("./uniqueSubject")(sequelize, Sequelize);
 db.topic = require("./topic")(sequelize, Sequelize);
 db.User = require("./user")(sequelize, Sequelize);
+db.level = require("./level")(sequelize, Sequelize);
 
 module.exports = db;

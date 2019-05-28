@@ -18,6 +18,8 @@
               <th>Level</th>
               <th>Subject</th>
               <th>Topic</th>
+              <th>Answer Key</th>
+              <th>Status</th>
               <th>Image</th>
               <th>Actions</th>
             </tr>
@@ -36,10 +38,13 @@
               <td> [[ques.level]] </td>
               <td> [[ques.subject]] </td>
               <td> [[ques.topic]] </td>
-              <td> [[ques.Image]] </td>
-              <td><a class="btn btn-primary" href="/question/update/[[ques.questionID]]" style='margin-right:25px'>Edit</a>
+              <td> [[ques.answerKey]] </td>
+              <td> <strong>  [[ques.status]] </strong> </td>
+              <td> <img src="/[[ques.Image]]" style = "width:75px; height:50px;" /> </td>
+              <td><a class="btn btn-primary" href="/question/update/[[ques.questionID]]" style='margin-right:15px'>Edit</a>
               </a>
-                <button class="btn btn-danger" ng-click="delete(ques.questionID)">Remove</button>
+                <button class="btn btn-danger" ng-click="delete(ques.questionID)" style='margin-right:15px'>Remove</button>
+                <a class="btn btn-success" href="/question/verify/[[ques.questionID]]" style='margin-right:15px'>Verify</a>
               </td>
 
             </tr>
@@ -70,7 +75,7 @@
     $scope.delete = function(id) {
       console.log(id);
       $.get("/api/v1/question/delete/"+id,function(data){
-        window.reload();
+        window.location.reload(true);
       });
     }
   });

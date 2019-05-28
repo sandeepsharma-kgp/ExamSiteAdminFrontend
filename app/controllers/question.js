@@ -93,12 +93,20 @@ router.post('/question/add', upload.array('uploadImage',12), function (req, res)
       question.level = req.body.level;
       question.subject = req.body.subject;
       question.topic = req.body.topic;
-      question.Image = req.files[0].path;
+      // question.Image = req.files[0].path;
+      question.status = "Skipped";
+      question.answerKey = req.body.answerKey;
+      question.new = "1";
       question.save();
-      console.log(req.files[0].fieldname);
+      console.log(question);
       res.redirect('/question/add');
 });
 
+
 router.get('/question/update/:id', function(req, res){
 	res.render('updateQuestion', {question: req.questionID});
+});
+
+router.get('/question/verify/:id', function(req, res) {
+  res.render('verifyQues', {question: req.questionID});
 });

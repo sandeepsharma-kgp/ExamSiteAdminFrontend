@@ -1,7 +1,7 @@
-<div class="container" ng-controller = "subjectInput">
+<div class="container">
   <h1 style="text-align: center"> Add a subject </h1>
       <div class="form-group" style="width: 30%; margin: 25px auto">
-  <form method="POST">
+  <form action = "/subject/add" method="POST">
     <div class="form-group">
       <input type="text" class="form-control" name="subjectName" placeholder="Subject Name" ng-model = "subjectName">
     </div>
@@ -42,21 +42,21 @@
 // }
 
 
-  app.controller("subjectInput", function($scope) {
-
-    $scope.add = function() {
-      console.log("!");
-      var data = {};
-      data.board = $scope.board;
-      data.class = $scope.class;
-      data.subjectName = $scope.subjectName;
-      $.post("/api/v1/subject/add",data, function(result){
-        console.log("Added successfully");
-        });
-      }
-  });
-
-</script>
+//   app.controller("subjectInput", function($scope) {
+//
+//     $scope.add = function() {
+//       console.log("!");
+//       var data = {};
+//       data.board = $scope.board;
+//       data.class = $scope.class;
+//       data.subjectName = $scope.subjectName;
+//       $.post("/api/v1/subject/add",data, function(result){
+//         console.log("Added successfully");
+//         });
+//       }
+//   });
+//
+// </script>
 
 <br>
 {{#if errorMessage}}

@@ -123,6 +123,15 @@ router.get('/api/v1/subject/all' , function (req, res) {
   });
 });
 
+router.get('/api/v1/uniqueSubject/all' , function (req, res) {
+  db.uniqueSubject.findAll().then(function(data) {
+    res.json(data);
+  }).catch(function(err) {
+    res.status(400).json({ error: err })
+    return;
+  });
+});
+
 router.get('/api/v1/subject/delete/:id' , function (req, res) {
   var id = req.params.id;
   db.subject.destroy({ where: {

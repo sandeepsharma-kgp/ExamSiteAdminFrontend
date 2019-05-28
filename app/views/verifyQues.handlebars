@@ -1,0 +1,116 @@
+<!--
+
+<div class="container" ng-controller= "verify">
+  <h1 style="text-align: center"> Verification page </h1>
+  <div class="form-group" style="width: 30%; margin: 25px auto">
+    <form >
+      <div class="form-group">
+        <div>
+          <td>  <button type="button" class="btn btn-success btn-lg" style = "margin-bottom: 20px; width: 100px">Verify</button> </td>
+          <br/>
+          <td>  <button type="button" class="btn btn-warning btn=lg" style = "margin-bottom: 20px; width: 100px">Cancel</button> </td>
+        </div>
+      </div>
+    </form>
+  </div>
+</div> -->
+
+
+<div class="container" ng-controller = "verify">
+  <h1 style="text-align: center"> Verify Question </h1>
+  <div class="form-group" style="width: 50%; margin: 25px auto">
+    <form>
+      <div class="form-group">
+        <div id="message" class="alert alert-success" role="alert">
+          Data updated successfully
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="questionID" placeholder="Question ID" ng-model="questionID">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="questionName" placeholder="Question" ng-model="questionName">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="option1" placeholder=" Option 1" ng-model = "option1">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="option2" placeholder=" Option 2" ng-model = "option2">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="option3" placeholder=" Option 3" ng-model = "option3">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="option4" placeholder=" Option 4" ng-model = "option4">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="level" placeholder="Level" ng-model = "level">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="subject" placeholder="Subject" ng-model = "subject">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="topic" placeholder="Topic" ng-model = "topic">
+      </div>
+      <div class="form-group">
+        <button type="submit"class="btn btn-success btn-lg btn-block" ng-click="updateData()"> Verify </button>
+      </div>
+      <div class="form-group">
+        <button type="submit"class="btn btn-danger btn-lg btn-block" > Cancel </button>
+      </div>
+      <a href= "/question/view"> Go back </a>
+    </form>
+  </div>
+</div>
+
+<script>
+
+  app.controller("verify", function($scope) {
+    $("#message").hide();
+    var url = window.location.href;
+    url = url.split("/");
+    $scope.questionID = url[url.length - 1];
+    console.log($scope.questionID);
+    $.get("/api/v1/question/update/" + $scope.questionID, function(data){
+        console.log(data);
+        if(data.length == 0) {
+
+        } else {
+          $scope.questionList = data[0];
+          $scope.questionID = $scope.questionList.questionID;
+          $scope.questionName = $scope.questionList.questionName;
+          $scope.option1 = $scope.questionList.option1;
+          $scope.option2 = $scope.questionList.option2;
+          $scope.option3 = $scope.questionList.option3;
+          $scope.option4 = $scope.questionList.option4;
+          $scope.level = $scope.questionList.level;
+          $scope.subject = $scope.questionList.subject;
+          $scope.topic = $scope.questionList.topic;
+          console.log($scope.questionID);
+          console.log($scope.questionName);
+          $scope.$apply();
+
+        }
+    });
+    $scope.updateData = function() {
+      console.log("!");
+      var data = {};
+      data.questionID = $scope.questionID;
+      data.questionName = $scope.questionName;
+      data.option1 = $scope.option1;
+      data.option2 = $scope.option2;
+      data.option3 = $scope.option3;
+      data.option4 = $scope.option4;
+      data.Level = $scope.level;
+      data.subject = $scope.subject;
+      data.topic = $scope.topic;
+      data.status = "Verified";
+      console.log(data);
+      $.post("/api/question/verify",data, function(result){
+        console.log("Updated successfully");
+        $("#message").show();
+      });
+    }
+});
+
+</script>

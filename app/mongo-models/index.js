@@ -12,6 +12,9 @@ const QuestionSchema = new Schema({
   subject : String,
   topic : String,
   Image : String,
+  answerKey : String,
+  solution : String,
+  status : String
 
 }, {
     "freezeTableName": true
