@@ -10,6 +10,7 @@ var con = require('../../config/db')
 var multer = require('multer');
 const Subject = require('../models/subject');
 var Question = require('../mongo-models/index');
+var TopicID = require('../mongo-models/topicDropdown')
 var passport = require('passport');
 var flash    = require('connect-flash');
 var session = require('express-session');
@@ -38,6 +39,35 @@ router.use(flash());
 module.exports = (app) => {
   app.use('/', router);
 };
+router.post('/api/topicdropdown/add' , function(req, res)
+{
+  data = req.body;
+  console.log(data);
+  var top = new TopicID();
+  TopicID.find({SID : req.body.SID}, function(err, data) {
+    console.log(data);
+    if(err)
+    console.log(err);
+    else if(data.length)
+    {
+      TopicID.update({SID: req.body.SID}, { $push: { "topic": req.body.topicName }}, function(err, result) {
+          if (err)
+              return err;
+          });
+      res.send("updated");
+      console.log("updated");
+    }
+    else
+    {
+      top.topic = req.body.topicName;
+      top.SID = req.body.SID;
+      top.save();
+      console.log("done");
+      res.send("done");
+    }
+    });
+})
+
 
 
 router.get('/api/v1/topic/update/:id', function (req, res) {
@@ -82,6 +112,19 @@ router.get('/api/v1/topic/all', function (req, res) {
       res.status(400).json({ error: err })
   });
 });
+
+router.get('/api/v1/topic/mongo/:id', function (req, res) {
+
+  console.log(req.params.id);
+  TopicID.find({SID : req.params.id}, function(err, data) {
+    console.log(data);
+    res.json(data);
+  }).catch(function(err) {
+    res.status(400).json({ error: err })
+    return;
+  });
+});
+
 
 router.get('/api/v1/topic/delete/:id', function (req, res) {
   var id = req.params.id;

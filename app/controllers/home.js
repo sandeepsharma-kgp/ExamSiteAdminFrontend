@@ -8,6 +8,7 @@ var session = require('express-session');
 var flash    = require('connect-flash');
 var crypto            = require('crypto');
 var LocalStrategy     = require('passport-local').Strategy;
+var TopicID = require('../mongo-models/topicDropdown');
 
 router.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false})); // session secret
 router.use(passport.initialize());
@@ -21,4 +22,8 @@ module.exports = (app) => {
 
 router.get('/', function(req,res){
   res.redirect("/login");
+});
+
+router.get('/question/dropdown', function(req, res) {
+  res.render("quesDropdown");
 });

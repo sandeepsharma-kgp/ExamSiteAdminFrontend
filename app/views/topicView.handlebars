@@ -11,7 +11,6 @@
               </th>
               <th>Topic ID</th>
               <th>Topic Name</th>
-              <th>Subject ID</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -22,7 +21,6 @@
               </td>
               <td> [[top.topicId]] </td>
               <td> [[top.topicName]] </td>
-              <td> [[top.SID]] </td>
               <td>  <a href="/topic/update/[[top.topicId]]" class="btn btn-primary" style='margin-right:25px'>Edit</a>
               <button class="btn btn-danger" ng-click="delete(top.topicId)">Remove</button></td>
 
@@ -42,6 +40,7 @@
 
   app.controller("topic1", function($scope) {
     $.get("/api/v1/topic/all",function(data){
+      console.log(data);
       $scope.topicList = data;
       $scope.$apply();
     });

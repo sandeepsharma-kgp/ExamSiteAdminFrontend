@@ -46,30 +46,20 @@ function checkloginstate(req, res, next) {
   }
 };
 
-router.get('/topic/add' , function(req, res)
+router.get('/uniquetopic/add' , function(req, res)
 {
   res.render("topicInput");
 
 });
 
-router.post('/topic/add' , function(req, res)
-{
-  var topicID= req.body.topicID;
-  var topicName= req.body.topicName;
-  console.log(req.body.board);
-  console.log(req.body.class);
-  console.log(req.body.subject);
-  var boardInitials = req.body.board.substring(0,4);
-  console.log(boardInitials);
-  var new2 = boardInitials.concat(req.body.class);
-  var new4 = req.body.subject.substring(0,4);
-  var new5 = new4.toUpperCase();
-  console.log(new5);
-  var new3 = new2.concat(new5);
-  console.log(new3);
+router.get('/topic/add', function(req, res) {
+  res.render("topicDropdown");
+});
 
-  var sqlQuery = "SELECT * FROM Topics WHERE topicID = ? LIMIT 1";
-  con.query(sqlQuery, [topicID], function(error, results){
+router.post('/uniquetopic/add' , function(req, res)
+{
+  var sqlQuery = "SELECT * FROM Topics WHERE topicName = ? LIMIT 1";
+  con.query(sqlQuery, [topicName], function(error, results){
     // There was an issue with the query
     if(error){
       console.log(error);
@@ -79,13 +69,12 @@ router.post('/topic/add' , function(req, res)
     if(results.length){
       // The username already exists
       console.log("Id exists");
-        res.render("topicInput", { errorMessage: "Topic already exists!! with ID " + topicID });
+        res.render("topicInput", { errorMessage: "Topic already exists!!" });
 
     }else{
       // The username wasn't found in the database
       console.log("ID doesnt exist");
       db.topic.create({
-        topicId: req.body.topicID,
         topicName: req.body.topicName
       });
         res.render("topicInput", { successMessage: "Topic added successfully!!" });
@@ -115,10 +104,9 @@ router.post('/topic/update' , function(req, res) {
 
   // update statment
   var sql = `UPDATE Topics
-             SET topicName = ?
-             WHERE topicID = ?`;
+             SET topicName = ? `;
 
-  var data = [req.body.newtopicName, req.body.topicID];
+  var data = [req.body.newtopicName];
 
   // execute the UPDATE statement
   con.query(sql, data, (error, results) => {
@@ -137,21 +125,21 @@ router.get('/topic/search' , function(req, res)
 
 });
 
-router.post('/topic/search' , function(req, res) {
-
-  // update statment
-  var sql = `SELECT topicName FROM  Topics
-             WHERE topicID = ?`;
-
-  // execute the UPDATE statement
-  con.query(sql, req.body.topicID, function(error, results) {
-    if (error){
-      return console.error(error.message);
-    }
-    console.log(results);
-  });
-  res.redirect("/topic/search");
-});
+// router.post('/topic/search' , function(req, res) {
+//
+//   // update statment
+//   var sql = `SELECT topicName FROM  Topics
+//              WHERE topicID = ?`;
+//
+//   // execute the UPDATE statement
+//   con.query(sql, req.body.topicName, function(error, results) {
+//     if (error){
+//       return console.error(error.message);
+//     }
+//     console.log(results);
+//   });
+//   res.redirect("/topic/search");
+// });
 
 router.get('/topic/view' , function (req, res)
 {

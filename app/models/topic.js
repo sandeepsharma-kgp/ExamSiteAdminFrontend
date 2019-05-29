@@ -5,8 +5,7 @@ module.exports = (sequelize, DataTypes) => {
      type: DataTypes.STRING ,
      primaryKey: true,
   },
-  topicName: DataTypes.STRING,
-  SID: DataTypes.STRING
+  topicName: DataTypes.STRING
   }, {
     timestamps: true
 }, {

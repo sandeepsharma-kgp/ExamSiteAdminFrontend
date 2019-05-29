@@ -49,6 +49,19 @@ router.get('/api/v1/question/update/:id', function (req, res) {
   });
 });
 
+router.get('/api/v1/question/dropdown/:id', function (req, res) {
+
+  console.log(req.params.id);
+  var question = new Question();
+  Question.find({questionID : req.params.id}, function(err, data) {
+    console.log(data);
+    res.json(data);
+  }).catch(function(err) {
+    res.status(400).json({ error: err })
+    return;
+  });
+});
+
 router.post('/api/question/update' , function(req, res)
 {
   data = req.body;

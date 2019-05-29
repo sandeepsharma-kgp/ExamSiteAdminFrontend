@@ -1,0 +1,95 @@
+<div class="container" ng-controller= "subject1">
+  <h1 style="text-align: center"> Choose the categories </h1>
+      <div class="form-group" style="width: 30%; margin: 25px auto">
+  <form class= "form-group">
+    <div >
+    <select name="subject" id="subject" style = "margin-bottom: 15px" ng-model = "subject" ng-click='showClass()'>
+      <option value="">--Select Subject--</option>
+     <option ng-repeat="sub in subjectList" value="[[sub.subjectName]]">[[sub.subjectName]]</option>
+   </select>
+  </div>
+    <select name="class" id="class" style = "margin-bottom: 15px" ng-model = "class" placeholder= "Class" ng-change='showBoard()' ng-show='class'>
+     <option value="">--Select Class--</option>
+     <option value="08">08</option>
+     <option value="09">09</option>
+     <option value="10">10</option>
+     <option value="11">11</option>
+     <option value="12">12</option>
+   </select>
+   <select name="board" id="board" ng-model = "board" ng-change='create()' ng-show = 'board'>
+    <option value="">--Select Board--</option>
+    <option value="CBSE">CBSE</option>
+    <option value="ICSE">ICSE</option>
+    <option value="JEEM">JEEMains</option>
+    <option value="JEEA">JEEAdvanced</option>
+    <option value="NEET">NEET</option>
+  </select>
+  <div>
+    <select name="topic" id="topic" style = "margin-bottom: 15px" ng-model = "topic" ng-show= 'topic'>
+      <option value="">--Select Topic--</option>
+     <option ng-repeat="top in topicList.topic" value="[[top]]">[[top]]</option>
+   </select>
+ </div>
+
+  <div class="form-group">
+    <a href="/topic/view"><button type="submit"class="btn btn-primary btn-lg btn-block"> Add another </button>
+    </a>
+  </div>
+  <div class="form-group">
+    <button type="submit"class="btn btn-primary btn-lg btn-block" ng-click="add()"> Submit </button>
+  </div>
+  <br/>
+  <a href= "/topic/view"> Go back </a>
+  </div>
+</div>
+
+  </form>
+
+  <script>
+
+  app.controller("subject1", function($scope) {
+
+    $.get("/api/v1/topic/all",function(data){
+      console.log(data);
+      $scope.topicList = data;
+      $scope.$apply();
+    });
+
+    getSubjects();
+    function getSubjects() {
+      $.get("/api/v1/uniqueSubject/all",function(data){
+        console.log(data);
+        $scope.subjectList = data;
+        $scope.$apply();
+      });
+    }
+    $scope.class = false;
+    $scope.board = false;
+    $scope.topic = false;
+    $scope.showClass= function(){
+      $scope.class = true;
+    }
+    $scope.showBoard= function(){
+      $scope.board = true;
+    }
+
+    $scope.create = function() {
+
+      $scope.topic = true;
+      var tempBoard = $scope.board;
+      console.log(typeof(tempBoard));
+      var boardInitials = tempBoard.substring(0,4);
+      var temp = boardInitials.concat($scope.class);
+      var temp2 = $scope.subject.substring(0,4).toUpperCase();
+      var SID = temp.concat(temp2);
+      console.log(SID);
+
+      $.get("/api/v1/topic/mongo/" + SID ,function(data){
+        console.log(data);
+        $scope.topicList = data[0];
+        $scope.$apply();
+      });
+    }
+  });
+
+  </script>
