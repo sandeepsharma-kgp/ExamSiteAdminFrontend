@@ -17,6 +17,30 @@ var session = require('express-session');
 var crypto            = require('crypto');
 var LocalStrategy     = require('passport-local').Strategy;
 
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null , './uploads/');
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const fileFilter = function(req,file,cb) {
+  if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png')
+  cb(null, true);
+  else {
+    cb(console.log("Unsupported format"), false);
+  }
+}
+
+var upload = multer({
+  storage: storage,
+  limits : {fileSize: 1024*1024*5},
+  fileFilter : fileFilter
+});
+
 router.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false})); // session secret
 router.use(passport.initialize());
 router.use(passport.session()); // persistent login sessions
@@ -33,8 +57,53 @@ router.get('/api/v1/question/all', function (req, res) {
     console.log('1');
     console.log(err);
    res.json(result);
- })
+ });
 });
+
+
+router.post('api/v1/question/add', upload.array('uploadImage',12), function (req, res)
+{     console.log("working");
+      var data = req.body;
+      console.log(data);
+      // console.log(req.files);
+      // // console.log(req.files[0].path);
+      // var question = new Question();
+      // question.questionID = req.body.questionID;
+      // question.questionName = req.body.questionName;
+      // question.option1 = req.body.option1;
+      // // if(req.files[0].path.length)
+      // // question.option1Image = req.files[0].path;
+      // question.option2 = req.body.option2;
+      // // if(req.files[1].path.length)
+      // // question.option2Image = req.files[1].path;
+      // question.option3 = req.body.option3;
+      // // if(req.files[2].path.length)
+      // // question.option3Image = req.files[2].path;
+      // question.option4 = req.body.option4;
+      // // if(req.files[3].path.length)
+      // // question.option4Image = req.files[3].path;
+      // question.level = req.body.level;
+      // question.subject = req.body.subject;
+      // question.topic = req.body.topic;
+      // // if(req.files[4].path.length)
+      // // // question.Image = req.files[4].path;
+      // question.solution = req.body.solution;
+      // // question.solutionImage = req.files[5].soltuionImage;
+      // question.status = "Skipped";
+      // question.answerKey = [req.body.answerKey1, req.body.answerKey2, req.body.answerKey3, req.body.answerKey4];
+      // var filtered = question.answerKey.filter(function (el) {
+      //   return el != null;
+      // });
+      //
+      // console.log(filtered);
+      // question.answerKey = filtered;      //removed null values in array
+      // question.save();
+      //
+      // console.log(question);
+      // res.redirect('/question/add');
+});
+
+
 
 router.get('/api/v1/question/update/:id', function (req, res) {
 

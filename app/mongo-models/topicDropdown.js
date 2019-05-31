@@ -3,8 +3,7 @@ const  Schema = mongoose.Schema;
 
 const TopicSchema = new Schema({
   SID: String,
-  topic : [],
-  topicID : String
+  topicId : []
 
 }, {
     "freezeTableName": true

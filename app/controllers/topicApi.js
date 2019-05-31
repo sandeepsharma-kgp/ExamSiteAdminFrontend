@@ -50,7 +50,7 @@ router.post('/api/topicdropdown/add' , function(req, res)
     console.log(err);
     else if(data.length)
     {
-      TopicID.update({SID: req.body.SID}, { $push: { "topic": req.body.topicName }}, function(err, result) {
+      TopicID.update({SID: req.body.SID}, { $push: { "topicId": req.body.topicId }}, function(err, result) {
           if (err)
               return err;
           });
@@ -59,7 +59,7 @@ router.post('/api/topicdropdown/add' , function(req, res)
     }
     else
     {
-      top.topic = req.body.topicName;
+      top.topicId = req.body.topicId;
       top.SID = req.body.SID;
       top.save();
       console.log("done");

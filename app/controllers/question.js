@@ -81,23 +81,40 @@ router.get("/question/view", function(req, res){
 
 router.post('/question/add', upload.array('uploadImage',12), function (req, res)
 {
-      console.log(req.files);
+
       // console.log(req.files[0].path);
       var question = new Question();
-      question.questionID = req.body.questionID;
+      // question.questionID = req.body.questionID;
       question.questionName = req.body.questionName;
       question.option1 = req.body.option1;
+      // if(req.files[0].path.length!=0)
+      // question.option1Image = req.files[0].path;
       question.option2 = req.body.option2;
+      // if(req.files[1].path.length)
+      // question.option2Image = req.files[1].path;
       question.option3 = req.body.option3;
+      // if(req.files[2].path.length)
+      // question.option3Image = req.files[2].path;
       question.option4 = req.body.option4;
+      // if(req.files[3].path.length)
+      // question.option4Image = req.files[3].path;
       question.level = req.body.level;
       question.subject = req.body.subject;
       question.topic = req.body.topic;
-      // question.Image = req.files[0].path;
+      // if(req.files[4].path.length)
+      // question.Image = req.files[4].path;
+      question.solution = req.body.solution;
+      // question.solutionImage = req.files[5].soltuionImage;
       question.status = "Skipped";
-      question.answerKey = req.body.answerKey;
-      question.new = "1";
+      question.answerKey = [req.body.answerKey1, req.body.answerKey2, req.body.answerKey3, req.body.answerKey4];
+      var filtered = question.answerKey.filter(function (el) {
+        return el != null;
+      });
+
+      console.log(filtered);
+      question.answerKey = filtered;      //removed null values in array
       question.save();
+
       console.log(question);
       res.redirect('/question/add');
 });

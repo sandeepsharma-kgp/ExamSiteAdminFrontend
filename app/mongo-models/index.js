@@ -5,15 +5,20 @@ const QuestionSchema = new Schema({
   questionID: String,
   questionName : String,
   option1 : String,
+  option1Image : String,
   option2 : String,
+  option2Image : String,
   option3 : String,
+  option3Image : String,
   option4 : String,
+  option4Image : String,
   level : String,
-  subject : String,
+  SID : String,
   topic : String,
   Image : String,
-  answerKey : String,
+  answerKey : [String],
   solution : String,
+  solutionImage : String,
   status : String
 
 }, {

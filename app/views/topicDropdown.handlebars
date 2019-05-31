@@ -2,17 +2,20 @@
   <h1 style="text-align: center"> Add a topic </h1>
       <div class="form-group" style="width: 30%; margin: 25px auto">
   <form class= "form-group">
-    <form action="action_form.php" method="get">
-      <input type = "text" list = "topicName" name="topicName" style = "margin-bottom: 15px" placeholder= "Topic" ng-model= "topicName">
-      <datalist id = "topicName">
-        <option ng-repeat= "top in topicList" value = "[[top.topicName]]"> [[top.topicName]] </option>
-      </datalist>
-    </form>
-    <div >
-    <select name="subject" id="subject" style = "margin-bottom: 15px" ng-model = "subject">
-     <option ng-repeat="sub in subjectList" value="[[sub.subjectName]]">[[sub.subjectName]]</option>
-   </select>
- </div>
+    <div class="row">
+      <select id = "topicId" ng-model = "topicId">
+        <option class="col-md-6" ng-repeat= "top in topicList | filter: check" value = "[[top.topicId]]" > [[top.topicName]] </option>
+      </select>
+      <div class="col-md-1"></div>
+      <input class="col-md-4" type = "text" autocomplete="off"  ng-model="check" style = "margin-bottom: 15px" placeholder= "Filter">
+      <br>
+    </div>
+
+    <div>
+        <select name="subject" id="subject" style = "margin-bottom: 15px" ng-model = "subject">
+         <option ng-repeat="sub in subjectList" value="[[sub.subjectName]]">[[sub.subjectName]]</option>
+       </select>
+     </div>
     <select name="class" id="class" style = "margin-bottom: 15px" ng-model = "class" placeholder= "Class">
      <option value="08">08</option>
      <option value="09">09</option>
@@ -57,6 +60,9 @@
   <script>
 
   app.controller("subject1", function($scope) {
+    $scope.test = function() {
+
+    }
 
     $.get("/api/v1/topic/all",function(data){
       console.log(data);
@@ -81,7 +87,7 @@
       var SID = temp.concat(temp2);
       console.log(SID);
       var data = {};
-      data.topicName = $scope.topicName;
+      data.topicId = $scope.topicId;
       data.SID = SID;
       console.log(data);
       $.post("/api/topicdropdown/add",data, function(result){
