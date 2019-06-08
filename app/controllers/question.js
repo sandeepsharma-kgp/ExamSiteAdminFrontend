@@ -94,7 +94,7 @@ router.post('/question/add', upload.fields(field), function (req, res)
           if(data[0].SID == req.body.sid) {
             console.log(data[0].SID);
             console.log(req.body.sid);
-            if(data[0].topicId.indexOf(req.body.topic1)!==-1)
+            if(data[0].topicId.indexOf(req.body.topic1)!=-1)
             {
               if(req.body.check== "update")
               res.render('questionInput', {errorMessage: "Question already exists to SID " + req.body.sid, question: data[0]});

@@ -90,16 +90,17 @@ router.post('/api/question/update' , function(req, res)
 {
   data = req.body;
   console.log(data);
-  Question.update({questionID: req.body.questionID}, {
-    $set:{ questionID : req.body.questionID,
+  Question.updateOne({_id: req.body.questionID}, {
+    $set:{
     questionName : req.body.questionName,
     option1 :req.body.option1,
     option2 : req.body.option2,
     option3 : req.body.option3,
     option4 : req.body.option4,
     level : req.body.level,
-    subject : req.body.subject,
-    topic : req.body.topic }}, function(err, result) {
+    answerKey : req.body.answerKey,
+    solution : req.body.solution
+  }}, function(err, result) {
       if (err)
           return err;
     });
@@ -110,7 +111,7 @@ router.post('/api/question/verify' , function(req, res)
 {
   data = req.body;
   console.log(data);
-  Question.update({questionID: req.body.questionID}, {
+  Question.updateOne({questionID: req.body.questionID}, {
     $set:{ questionID : req.body.questionID,
     questionName : req.body.questionName,
     option1 :req.body.option1,

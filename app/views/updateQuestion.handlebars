@@ -22,14 +22,30 @@
       <div class="form-group">
         <input type="text" class="form-control" name="option4" placeholder=" Option 4" ng-model = "option4">
       </div>
-      <div class="form-group">
+      {{!-- <div class="form-group">
         <input type="text" class="form-control" name="level" placeholder="Level" ng-model = "level">
+      </div> --}}
+      <select name="level" id="level" ng-model = "level">
+        <option value="Beginner">Beginner</option>
+        <option value="Amateur">Amateur</option>
+        <option value="Advanced">Advanced</option>
+        <option value="Expert">Expert</option>
+      </select>
+      <div class="form-group">
+        <input type="text" class="form-control" name="SID" placeholder="SID" ng-model = "SID">
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="subject" placeholder="Subject" ng-model = "subject">
+        <input type="text" class="form-control" name="topicId" placeholder="top[icId" ng-model = "topicId">
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="topic" placeholder="Topic" ng-model = "topic">
+        <input type="text" class="form-control" name="solution" placeholder="solution" ng-model = "solution">
+      </div>
+      <div class="dropdown">
+        <h6> AnswerKey: </h6>
+        <input type="checkbox" name="answerKey1" value="A" ng-model="answerKey1" /> A
+        <input type="checkbox" name="answerKey2" value="B" ng-model="answerKey2" /> B
+        <input type="checkbox" name="answerKey3" value="C" ng-model="answerKey3" /> C
+        <input type="checkbox" name="answerKey4" value="D" ng-model="answerKey4" /> D
       </div>
       <div class="form-group">
         <button type="submit"class="btn btn-primary btn-lg btn-block" ng-click="updateData()"> Submit </button>
@@ -53,17 +69,16 @@
 
         } else {
           $scope.questionList = data[0];
-          $scope.questionID = $scope.questionList.questionID;
           $scope.questionName = $scope.questionList.questionName;
           $scope.option1 = $scope.questionList.option1;
           $scope.option2 = $scope.questionList.option2;
           $scope.option3 = $scope.questionList.option3;
           $scope.option4 = $scope.questionList.option4;
           $scope.level = $scope.questionList.level;
-          $scope.subject = $scope.questionList.subject;
-          $scope.topic = $scope.questionList.topic;
-          console.log($scope.questionID);
-          console.log($scope.questionName);
+          $scope.SID = $scope.questionList.SID;
+          $scope.topicId = $scope.questionList.topicId;
+          [$scope.answerKey1, $scope.answerKey2, $scope.answerKey3, $scope.answerKey4] = $scope.questionList.answerKey;
+          $scope.solution = $scope.questionList.solution;
           $scope.$apply();
 
         }
@@ -77,9 +92,9 @@
       data.option2 = $scope.option2;
       data.option3 = $scope.option3;
       data.option4 = $scope.option4;
-      data.Level = $scope.level;
-      data.subject = $scope.subject;
-      data.topic = $scope.topic;
+      data.level = $scope.level;
+      data.answerKey = [$scope.answerKey1, $scope.answerKey2, $scope.answerKey3, $scope.answerKey4];
+      data.solution = $scope.solution;
       console.log(data);
       $.post("/api/question/update",data, function(result){
         console.log("Updated successfully");
