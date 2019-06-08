@@ -1,31 +1,41 @@
-<div class="container">
+<div class="container" ng-controller= "subjectInput">
   <h1 style="text-align: center"> Add a subject </h1>
-      <div class="form-group" style="width: 30%; margin: 25px auto">
-  <form action = "/subject/add" method="POST">
-    <div class="form-group">
-      <input type="text" class="form-control" name="subjectName" placeholder="Subject Name" ng-model = "subjectName">
-    </div>
-    <select name="class" id="class" style = "margin-bottom: 15px" ng-model = "class">
-     <option value="08">08</option>
-     <option value="09">09</option>
-     <option value="10">10</option>
-     <option value="11">11</option>
-     <option value="12">12</option>
-   </select>
-   <select name="board" id="board" ng-model = "board">
-    <option value="CBSE">CBSE</option>
-    <option value="ICSE">ICSE</option>
-    <option value="JEEM">JEEMains</option>
-    <option value="JEEA">JEEAdvanced</option>
-    <option value="NEET">NEET</option>
-  </select>
-    <div class="form-group">
-      <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click = "add()"> Submit </button>
-    </div>
+  <div class="form-group" style="width: 30%; margin: 25px auto">
+    <form class= "form-group">
+      <div class="form-group">
+        <input type="text" class="form-control" name="subjectName" placeholder="Subject Name" ng-model = "subjectName">
+      </div>
+      <select name="class" id="class" style = "margin-bottom: 15px" ng-model = "class">
+        <option value="08">08</option>
+        <option value="09">09</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+      <select name="board" id="board" ng-model = "board">
+        <option value="CBSE">CBSE</option>
+        <option value="ICSE">ICSE</option>
+        <option value="JEEM">JEEMains</option>
+        <option value="JEEA">JEEAdvanced</option>
+        <option value="NEET">NEET</option>
+      </select>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click = "add()"> Submit </button>
+      </div>
+
+      <a href= "/subject/view"> Go back </a>
+    </form>
+  </div>
+  <div class="alert alert-danger" role="alert" style=" width: 30%; margin: 25px auto" ng-show= "error">
+      [[errorMessage]]
+  </div>
+  <div class="alert alert-success" role="alert" style=" width: 30%; margin: 25px auto" ng-show= "success">
+      [[successMessage]]
   </div>
 </div>
-    <a href= "/subject/view"> Go back </a>
-  </form>
+
+<br/>
+
 
 <script>
 // var selected_index = oForm.elements["selClass"].selectedIndex;
@@ -42,31 +52,26 @@
 // }
 
 
-//   app.controller("subjectInput", function($scope) {
-//
-//     $scope.add = function() {
-//       console.log("!");
-//       var data = {};
-//       data.board = $scope.board;
-//       data.class = $scope.class;
-//       data.subjectName = $scope.subjectName;
-//       $.post("/api/v1/subject/add",data, function(result){
-//         console.log("Added successfully");
-//         });
-//       }
-//   });
-//
-// </script>
+  app.controller("subjectInput", function($scope) {
 
-<br>
-{{#if errorMessage}}
-<div class="alert alert-danger" role="alert" style=" width: 30%; margin: 25px auto">
-    {{errorMessage}}
-{{/if}}
-</div>
-{{#if successMessage}}
-<div class="alert alert-success" role="alert" style=" width: 30%; margin: 25px auto">
-    {{successMessage}}
-</div>
-{{/if}}
-</br>
+      $scope.error = false;
+    $scope.add = function() {
+      console.log("!");
+      var data = {};
+      data.board = $scope.board;
+      data.class = $scope.class;
+      data.subjectName = $scope.subjectName;
+      $.post("/api/v1/subject/add",data, function(result){
+        console.log("Added successfully");
+        console.log(result);
+        if(result.errorMessage)
+          $scope.error = true;
+        else if(result.successMessage)
+          $scope.success = true;
+        $scope.errorMessage = result.errorMessage;
+        $scope.successMessage = result.successMessage;
+        $scope.$apply();
+        });
+     }
+  });
+ </script>

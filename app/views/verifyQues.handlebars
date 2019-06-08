@@ -26,9 +26,6 @@
         </div>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="questionID" placeholder="Question ID" ng-model="questionID">
-      </div>
-      <div class="form-group">
         <input type="text" class="form-control" name="questionName" placeholder="Question" ng-model="questionName">
       </div>
       <div class="form-group">
@@ -69,15 +66,14 @@
     $("#message").hide();
     var url = window.location.href;
     url = url.split("/");
-    $scope.questionID = url[url.length - 1];
-    console.log($scope.questionID);
-    $.get("/api/v1/question/update/" + $scope.questionID, function(data){
+    $scope._id = url[url.length - 1];
+    console.log($scope._id)
+    $.get("/api/v1/question/update/" + $scope._id, function(data){
         console.log(data);
         if(data.length == 0) {
 
         } else {
           $scope.questionList = data[0];
-          $scope.questionID = $scope.questionList.questionID;
           $scope.questionName = $scope.questionList.questionName;
           $scope.option1 = $scope.questionList.option1;
           $scope.option2 = $scope.questionList.option2;
@@ -86,8 +82,6 @@
           $scope.level = $scope.questionList.level;
           $scope.subject = $scope.questionList.subject;
           $scope.topic = $scope.questionList.topic;
-          console.log($scope.questionID);
-          console.log($scope.questionName);
           $scope.$apply();
 
         }
@@ -95,7 +89,6 @@
     $scope.updateData = function() {
       console.log("!");
       var data = {};
-      data.questionID = $scope.questionID;
       data.questionName = $scope.questionName;
       data.option1 = $scope.option1;
       data.option2 = $scope.option2;

@@ -40,7 +40,7 @@
 
   app.controller("topic1", function($scope) {
     $.get("/api/v1/topic/all",function(data){
-      console.log(data);
+      // console.log(data);
       $scope.topicList = data;
       $scope.$apply();
     });
@@ -49,6 +49,10 @@
       console.log(id);
       $.get("/api/v1/topic/delete/"+id,function(data){
         window.reload();
+      });
+
+      $.get("/api/v1/topicmongo/delete/"+ id, function (data) {
+        console.log("Api delete");
       });
     }
 

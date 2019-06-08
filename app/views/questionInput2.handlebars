@@ -1,0 +1,169 @@
+
+
+<div class="container" ng-controller= "subject1">
+  <h1 style="text-align: center"> Choose the categories </h1>
+    <div class="form-group" style="width: 30%; margin: 25px auto">
+      <form class= "form-group">
+        <div >
+          <select name="subject" id="subject" style = "margin-bottom: 15px" ng-model = "subject" ng-click='showClass()'>
+            <option value="">--Select Subject--</option>
+            <option ng-repeat="sub in subjectList" value="[[sub.subjectName]]">[[sub.subjectName]]</option>
+          </select>
+        </div>
+        <select name="class" id="class" style = "margin-bottom: 15px" ng-model = "class" placeholder= "Class" ng-change='showBoard()' ng-show='class'>
+           <option value="">--Select Class--</option>
+           <option value="08">08</option>
+           <option value="09">09</option>
+           <option value="10">10</option>
+           <option value="11">11</option>
+           <option value="12">12</option>
+        </select>
+       <select name="board" id="board" ng-model = "board" ng-change='create()' ng-show = 'board'>
+          <option value="">--Select Board--</option>
+          <option value="CBSE">CBSE</option>
+          <option value="ICSE">ICSE</option>
+          <option value="JEEM">JEEMains</option>
+          <option value="JEEA">JEEAdvanced</option>
+          <option value="NEET">NEET</option>
+        </select>
+        <!-- <div>
+          <select name="topic" id="topic" style = "margin-bottom: 15px" ng-model = "topic" ng-show= 'topic'>
+            <option value="">--Select Topic--</option>
+            <option ng-repeat="top in topicList.topic" value="[[top]]">[[top]]</option>
+         </select>
+        </div> -->
+        <div class="row">
+          <select id = "topicId" name = "topic" ng-model = "topicId" ng-show= 'topic' ng-click= "showQues()">
+            <option class="col-md-6" ng-repeat= "top in topicList | filter: check" value = "[[top.topicId]]" > [[top.topicName]] </option>
+          </select>
+          <div class="col-md-1"></div>
+          <input class="col-md-4" type = "text" autocomplete="off"  ng-model="check" style = "margin-bottom: 15px" placeholder= "Filter" ng-show='topic'>
+          <br>
+        </div>
+      </form>
+    </div>
+<!-- <div class="container" ng-controller= "subject1"> -->
+  <h1 style="text-align: center"> Add a question </h1>
+    <div class="form-group" style="width: 30%; margin: 25px auto" ng-show='showques'>
+      <form class= "form-group" id= "myForm" enctype="multipart/form-data" method="POST" action="/question/add">
+        <div class="form-group">
+          <input type="text" class="form-control" name="questionName" placeholder="Question">
+          <input type="file" class="form-control" name="quesImage" placeholder="Upload" >
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="option1"  placeholder="option1">
+          <input type="file" class="form-control" name="option1Image" placeholder="Upload" ng-model= "uploadImage">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="option2" placeholder="option2">
+          <input type="file" class="form-control" name="option2Image" placeholder="Upload" ng-model= "uploadImage">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="option3" placeholder="option3">
+          <input type="file" class="form-control" name="option3Image" placeholder="Upload" ng-model= "uploadImage">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="option4" placeholder="option4">
+          <input type="file" class="form-control" name="option4Image" placeholder="Upload" ng-model= "uploadImage">
+        </div>
+        <div>
+          <select name="level" id="level" value={{question.level}}>
+             <option value="Beginner">Beginner</option>
+             <option value="Amateur">Amateur</option>
+             <option value="Advanced">Advanced</option>
+             <option value="Expert">Expert</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="solution" placeholder="solution">
+          <input type="file" class="form-control" name="solImage" placeholder="Upload" ng-model= "uploadImage">
+        </div>
+        <div class="dropdown">
+          <h6> AnswerKey: </h6>
+          <input type="checkbox" name="answerKey1" value="A" ng-model="answerKey1"/> A
+          <input type="checkbox" name="answerKey2" value="B" ng-model="answerKey2"/> B
+          <input type="checkbox" name="answerKey3" value="C" ng-model="answerKey3"/> C
+          <input type="checkbox" name="answerKey4" value="D" ng-model="answerKey4"/> D
+        </div>
+        <input type="text" name="sid" ng-model= "sid" ng-hide=true value="[[sid]]"></input>
+        <input type="text" name="topic1" ng-model= "topic1" ng-hide=true value="[[topic1]]"></input>
+        <div class="form-group">
+            <button type="submit"class="btn btn-primary btn-lg btn-block" name="check" value = "update"> Add another </button>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-lg btn-block" name= "check" value= "new" > Submit </button>
+        </div>
+        <a href= "/question/view"> Go back </a>
+      </form>
+    </div>
+  </div>
+
+  {{#if successMessage}}
+  <div class="alert alert-success" role="alert" style=" width: 30%; margin: 25px auto">
+      {{successMessage}}
+  </div>
+  {{/if}}
+
+  <script>
+
+  app.controller("subject1",  function($scope) {
+
+
+      getSubjects();
+      function getSubjects() {
+        $.get("/api/v1/uniqueSubject/all",function(data){
+          console.log(data);
+          $scope.subjectList = data;
+          $scope.$apply();
+        });
+      }
+      {{#if questionName}}
+        $scope.questionName = {{question.questionName}}
+      {{/if}}
+      $scope.class = false;
+      $scope.board = false;
+      $scope.topic = false;
+      $scope.showClass= function(){
+        $scope.class = true;
+      }
+      $scope.showBoard= function(){
+        $scope.board = true;
+      }
+
+      $scope.showques = true;
+      $scope.showQues = function(){
+        // $scope.showques = true;
+        console.log($scope.topicId);
+        $scope.topic1 = $scope.topicId;
+
+      }
+      $scope.create = function() {
+
+        $scope.topic = true;
+        var tempBoard = $scope.board;
+        console.log(typeof(tempBoard));
+        var boardInitials = tempBoard.substring(0,4);
+        var temp = boardInitials.concat($scope.class);
+        var temp2 = $scope.subject.substring(0,4).toUpperCase();
+        var SID = temp.concat(temp2);
+        console.log(SID);
+        $scope.sid = SID;
+
+        $.get("/api/v1/topic/mongo/" + SID ,function(data){
+          console.log(data);
+          var id = {};
+          id.data = data[0].topicId;
+          console.log(id);
+          $scope.$apply();
+          $.post("/api/v1/topic/name/", id, function(result){
+            console.log("Name searching...");
+            console.log(result);
+            $scope.topicList = result;
+          });
+        });
+      }
+
+    });
+
+    </script>

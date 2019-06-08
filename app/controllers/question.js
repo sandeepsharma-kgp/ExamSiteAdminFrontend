@@ -10,6 +10,7 @@ var con = require('../../config/db')
 var multer = require('multer');
 const Subject = require('../models/subject');
 var Question = require('../mongo-models/index');
+var QuestionID = require('../mongo-models/questionId');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var session = require('express-session');
@@ -76,47 +77,192 @@ router.get("/question/view", function(req, res){
 
  router.get('/question/add', function (req, res)
 {
-  res.render("questionInput");
+  res.render("questionInput2");
 });
 
-router.post('/question/add', upload.array('uploadImage',12), function (req, res)
+var field = [{ name: 'quesImage', maxCount: 1 }, { name: 'option1Image', maxCount: 1 }, { name: 'option2Image', maxCount: 1 }, { name: 'option3Image', maxCount: 1 }, { name: 'option4Image', maxCount: 1 }, { name: 'solImage', maxCount: 1 }];
+
+router.post('/question/add', upload.fields(field), function (req, res)
 {
-
-      // console.log(req.files[0].path);
       var question = new Question();
-      // question.questionID = req.body.questionID;
-      question.questionName = req.body.questionName;
-      question.option1 = req.body.option1;
-      // if(req.files[0].path.length!=0)
-      // question.option1Image = req.files[0].path;
-      question.option2 = req.body.option2;
-      // if(req.files[1].path.length)
-      // question.option2Image = req.files[1].path;
-      question.option3 = req.body.option3;
-      // if(req.files[2].path.length)
-      // question.option3Image = req.files[2].path;
-      question.option4 = req.body.option4;
-      // if(req.files[3].path.length)
-      // question.option4Image = req.files[3].path;
-      question.level = req.body.level;
-      question.subject = req.body.subject;
-      question.topic = req.body.topic;
-      // if(req.files[4].path.length)
-      // question.Image = req.files[4].path;
-      question.solution = req.body.solution;
-      // question.solutionImage = req.files[5].soltuionImage;
-      question.status = "Skipped";
-      question.answerKey = [req.body.answerKey1, req.body.answerKey2, req.body.answerKey3, req.body.answerKey4];
-      var filtered = question.answerKey.filter(function (el) {
-        return el != null;
+      console.log(req.body);
+      Question.find({_id : req.body.questionId}, function(err, data) {
+        if(err)
+        console.log(err);
+        else if(data.length) {
+          console.log("if data from question again");
+          if(data[0].SID == req.body.sid) {
+            console.log(data[0].SID);
+            console.log(req.body.sid);
+            if(data[0].topicId.indexOf(req.body.topic1)!==-1)
+            {
+              if(req.body.check== "update")
+              res.render('questionInput', {errorMessage: "Question already exists to SID " + req.body.sid, question: data[0]});
+
+              else
+              res.render('questionInput2', {errorMessage: "Question already exists to SID " + req.body.sid});
+            }
+            else{
+              Question.updateOne({_id: req.body.questionId}, { $push: { "topicId": req.body.topic1}}, function(err, result) {
+                  if (err)
+                      return err;
+                  console.log("updated again");
+                  console.log(result);
+                  if(req.body.check== "update")
+                  res.render('questionInput', {successMessage: "Question added successfully to SID " + req.body.sid, question: data[0]});
+
+                  else
+                  res.render('questionInput2', {successMessage: "Question added successfully to SID " + req.body.sid});
+              });
+
+            }
+          }
+        else{
+          question.questionName = data[0].questionName;
+          question.option1 = data[0].option1;
+          question.imagePath= data[0].imagePath;
+          question.option2 = data[0].option2;
+          question.option3 = data[0].option3;
+          question.option4 = data[0].option4;
+          question.level = data[0].level;
+          question.subject = data[0].subject;
+          question.solution = data[0].solution;
+          question.status = "Skipped";
+          question.SID = req.body.sid;
+          question.topicId[0] = req.body.topic1;
+          question.answerKey = data[0].answerKey;
+          console.log("hello");
+          console.log(question), "from question";
+          question.save();
+          if(req.body.check== "update")
+          res.render('questionInput', {successMessage: "Question added successfully to SID " + req.body.sid, question: data[0]});
+
+          else
+          res.render('questionInput2', {successMessage: "Question added successfully to SID " + req.body.sid});
+        }
+        }
+        else
+        {
+
+          console.log("body " , req.body);
+          var quesImage, option1Image, option2Image, option3Image, option4Image, solImage;
+          try {
+            quesImage = req.files['quesImage'][0].path;
+          } catch (e) {
+            quesImage = null;
+          } finally {
+            // QUESTION
+            question.imagePath[0] = quesImage;
+          }
+          try {
+            option1Image = req.files['option1Image'][0].path;
+          } catch (e) {
+            option1Image = null;
+          } finally {
+            question.imagePath[1] = option1Image;
+          }
+          try {
+            option2Image = req.files['option2Image'][0].path;
+          } catch (e) {
+            uploadImage1 = null;
+          } finally {
+            question.imagePath[2] = option2Image;
+          }
+          try {
+            option3Image = req.files['option3Image'][0].path;
+          } catch (e) {
+            optiion3Image = null;
+          } finally {
+            question.imagePath[3] = option3Image;
+          }
+          try {
+            option4Image = req.files['option4Image'][0].path;
+          } catch (e) {
+            option4Image = null;
+          } finally {
+            question.imagePath[4] = option4Image;
+          }
+          try {
+            solImage = req.files['solImage'][0].path;
+          } catch (e) {
+            solImage = null;
+          } finally {
+            question.imagePath[5] = solImage;
+          }
+          if(question.imagePath == null)
+          question.imagePath= req.body.imagePath;
+          question.questionName = req.body.questionName;
+          question.option1 = req.body.option1;
+          question.option2 = req.body.option2;
+          question.option3 = req.body.option3;
+          question.option4 = req.body.option4;
+          question.level = req.body.level;
+          question.subject = req.body.subject;
+          question.solution = req.body.solution;
+          question.status = "Skipped";
+          question.SID = req.body.sid;
+          question.topicId[0] = req.body.topic1;
+          question.answerKey = [req.body.answerKey1, req.body.answerKey2, req.body.answerKey3, req.body.answerKey4];
+          var filtered = question.answerKey.filter(function (el) {
+            return el != null;
+          });
+
+          console.log(filtered);
+          question.answerKey = filtered;      //removed null values in array
+          console.log(question);
+          question.save();
+          if(req.body.check== "update")
+          res.render('questionInput', {successMessage: "Question added successfully to SID " + req.body.sid, question: question});
+
+          else
+          res.render('questionInput2', {successMessage: "Question added successfully to SID " + req.body.sid});
+
+          var ques = new QuestionID();
+          QuestionID.find({SID : req.body.sid}, function(err, data) {
+            if(err)
+            console.log(err);
+            else if(data.length) {
+              console.log("if data");
+            //   if(data[0].topicId) {
+            //   var topicId = data[0].topicId;
+            //   console.log(topicId);
+            //   var boolean = false;
+            //   console.log(topicId);
+            //   for(var i = 0; i<topicId.length; i++)  {
+            //       if(topicId[i]== req.body.topic1) {
+            //         boolean = true;
+            //       }
+            //   }     //for loop ends here
+            // // }
+            //   console.log(boolean);
+            //   if(boolean == false){
+                  QuestionID.updateOne({SID: req.body.sid}, { $push: { "topic": req.body.topicId, "questionId": question._id }}, function(err, result) {
+                      if (err)
+                          return err;
+                      console.log("updated");
+                  });
+              // }
+              // else if(boolean == true) {
+              //   console.log("topic already exists");
+              // }
+
+            }
+            else
+            {
+              // ques.topic = question.topicId;
+              // ques.SID = question.SID;
+              ques.questionId = question._id;
+              console.log("SID from ques", req.body.sid);
+              console.log("topicId from ques", req.body.topic1);
+              ques.topic = req.body.topic1;
+              ques.SID = req.body.sid;
+              ques.save();
+              console.log("done");
+            }
+          });
+
+        }
       });
-
-      console.log(filtered);
-      question.answerKey = filtered;      //removed null values in array
-      question.save();
-
-      console.log(question);
-      res.redirect('/question/add');
 });
 
 

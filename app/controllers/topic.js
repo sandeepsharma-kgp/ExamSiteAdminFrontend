@@ -59,7 +59,7 @@ router.get('/topic/add', function(req, res) {
 router.post('/uniquetopic/add' , function(req, res)
 {
   var sqlQuery = "SELECT * FROM Topics WHERE topicName = ? LIMIT 1";
-  con.query(sqlQuery, [topicName], function(error, results){
+  con.query(sqlQuery, [req.body.topicName], function(error, results){
     // There was an issue with the query
     if(error){
       console.log(error);

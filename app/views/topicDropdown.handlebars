@@ -31,31 +31,22 @@
     <option value="NEET">NEET</option>
   </select>
   <div class="form-group">
-    <a href="/topic/view"><button type="submit"class="btn btn-primary btn-lg btn-block"> Add another </button>
-    </a>
-  </div>
-  <div class="form-group">
     <button type="submit"class="btn btn-primary btn-lg btn-block" ng-click="add()"> Submit </button>
   </div>
   <br/>
   <a href= "/topic/view"> Go back </a>
   </div>
+  <div class="alert alert-danger" role="alert" style=" width: 30%; margin: 25px auto" ng-show= "error">
+      [[errorMessage]]
+  </div>
+  <div class="alert alert-success" role="alert" style=" width: 30%; margin: 25px auto" ng-show= "success">
+      [[successMessage]]
+  </div>
 </div>
 
   </form>
 
-  <br>
-  {{#if errorMessage}}
-  <div class="alert alert-danger" role="alert" style=" width: 100%; margin: 25px auto">
-      {{errorMessage}}
-  {{/if}}
-  </div>
-  {{#if successMessage}}
-  <div class="alert alert-success" role="alert" style=" width: 30%; margin: 25px auto">
-      {{successMessage}}
-  </div>
-  {{/if}}
-  </br>
+
 
   <script>
 
@@ -92,8 +83,16 @@
       console.log(data);
       $.post("/api/topicdropdown/add",data, function(result){
         console.log("Added successfully");
+        if(result.errorMessage)
+          $scope.error = true;
+        else if(result.successMessage)
+          $scope.success = true;
+        $scope.errorMessage = result.errorMessage;
+        $scope.successMessage = result.successMessage;
+        $scope.$apply();
         // $("#message").show();
       });
+
     }
   });
 

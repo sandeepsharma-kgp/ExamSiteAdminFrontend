@@ -14,21 +14,6 @@ var passport = require('passport');
 var flash    = require('connect-flash');
 var session = require('express-session');
 
-var crypto            = require('crypto');
-var LocalStrategy     = require('passport-local').Strategy;
-var Store             = require('express-session').Store;
-var BetterMemoryStore = require('session-memory-store')(session);
-
-var store = new BetterMemoryStore({ expires: 60 * 60 * 1000, debug: true });
- router.use(session({
-    name: 'JSESSION',
-    secret: 'nitrkl',
-    store:  store,
-    resave: true,
-    saveUninitialized: true
-}));
-
-
 router.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false})); // session secret
 router.use(passport.initialize());
 router.use(passport.session()); // persistent login sessions
@@ -41,9 +26,6 @@ module.exports = (app) => {
 
 router.post('/api/v1/subject/add', function (req, res) {
   var data = req.body;
-  console.log(data);
-  db.Subject.findAll({where : {name : req.body.subjectName}})
-  console.log(req.body.class);
   var boardInitials = req.body.board.substring(0,4);
   var new2 = boardInitials.concat(req.body.class);
   var new4 = req.body.subjectName.substring(0,4);
@@ -51,31 +33,35 @@ router.post('/api/v1/subject/add', function (req, res) {
   console.log(new5);
   var new3 = new2.concat(new5);
   console.log(new3);
-  var sqlQuery = "SELECT * FROM Subjects WHERE SID = ? LIMIT 1";
-  con.query(sqlQuery, [new3], function(error, results){
-  // There was an issue with the query
-    if(error){
-    console.log(error);
-    return ;
+
+  db.subject.findAll({where: {SID: new3}}).then(function(data) {
+    console.log(data);
+    if(data.length){
+      res.send({errorMessage: "Subject already exists with SID " + new3});
+      console.log("Exists");
     }
-
-    if(results.length){
-    // The username already exists
-      console.log("Id exists");
-        res.render("subjectInput", { errorMessage: "Subject already exists with SID "+ new3});
-
-    }else{
-    // The username wasn't found in the database
-      console.log("ID doesnt exist");
-        db.Subject.create({
-          subjectName: req.body.subjectName,
-          class: req.body.class,
-          board: req.body.board,
-          SID : new3
-        });
-      res.render("subjectInput", { successMessage: "Subject is added successfully with SID " + new3});
-      }
+    else {
+      db.subject.create({
+        subjectName: req.body.subjectName,
+        class: req.body.class,
+        board: req.body.board,
+        SID : new3
       });
+      db.uniqueSubject.findAll({ where: {subjectName : req.body.subjectName}}).then(function(results) {
+               if(results!=0)
+               console.log("Not a unique subject");
+               else {
+                 db.uniqueSubject.create({
+                 subjectName: req.body.subjectName,
+                   })
+                   }
+      }).catch(function(err) {
+          res.status(400).json({ error: err })
+          return;
+          });
+      res.send({successMessage: "Subject added successfully " + new3});
+    }
+  });
 });
 
 router.get('/api/v1/subject/update/:id', function (req, res) {
@@ -98,21 +84,30 @@ router.post('/api/subject/update' , function(req, res)
   console.log(subject);
   console.log(data.SID);
   console.log(data.subjectName);
-  var sqlQuery = "UPDATE Subjects SET SID = ?, subjectName = ? WHERE SID = ?;";
-  con.query(sqlQuery, subject, function(error, results){
-    // There was an issue with the query
-    if(error){
-      console.log(error);
-      return;
-    }
-
-    if(results.length){
-      // The username already exists
-      console.log("Updated");
-    }
-  });
-  res.send("done");
+  // var sqlQuery = "UPDATE Subjects SET SID = ?, subjectName = ? WHERE SID = ?;";
+  // con.query(sqlQuery, subject, function(error, results){
+  //   // There was an issue with the query
+  //   if(error){
+  //     console.log(error);
+  //     return;
+  //   }
+  //
+  //   if(results.length){
+  //     // The username already exists
+  //     console.log("Updated");
+  //   }
+  // });
+  db.subject.update(
+   {subjectName: data.subjectName},
+   {where: {SID: data.SID}}).then(function(data) {
+     res.send({successMessage : "Updated successfully"});
+   }).catch(function(err) {
+     res.status(400).json({ error: err })
+     return;
+   });
 });
+
+
 
 router.get('/api/v1/subject/all' , function (req, res) {
   db.subject.findAll().then(function(data) {
