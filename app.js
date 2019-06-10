@@ -1,4 +1,4 @@
-
+require('dotenv').config()
 const express = require('express');
 const config = require('./config/config');
 const db = require('./app/models');
@@ -15,6 +15,8 @@ require('./config/passport')(passport); // pass passport for configuration
 app.use('/uploads', express.static('uploads'));
 
 module.exports = require('./config/express')(app, config);
+
+console.log(config);
 
 db.sequelize
   .sync()

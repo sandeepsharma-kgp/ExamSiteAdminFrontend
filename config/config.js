@@ -1,6 +1,13 @@
 const path = require('path');
 const rootPath = path.normalize(__dirname + '/..');
 const env = process.env.NODE_ENV || 'development';
+var dotenv = require('dotenv');
+//
+// db.connect({
+//   host: process.env.DB_HOST,
+//   username: process.env.DB_USER,
+//   password: process.env.DB_PASS
+// })
 
 const config = {
   development: {
@@ -9,8 +16,8 @@ const config = {
       name: 'examsiteadminfrontend'
     },
     port: process.env.PORT || 3000,
-    db: 'mysql://Turbo:temp12345@localhost/examsiteadminfrontend_development',
-    mongodb: 'mongodb://localhost/examsiteadminfrontend_development'
+    db: 'mysql://' + process.env.DB_USER + ':' +  process.env.DB_PASS + '@' + process.env.DB_HOST + '/examsiteadminfrontend_development',
+    mongodb: 'mongodb://' + process.env.DB_HOST + '/examsiteadminfrontend_development'
 
   },
 
@@ -29,7 +36,7 @@ const config = {
       name: 'examsiteadminfrontend'
     },
     port: process.env.PORT || 3000,
-    db: 'mysql://localhost/examsiteadminfrontend-production'
+    db: 'mysql://' + process.env.DB_HOST + '/examsiteadminfrontend-production'
   }
 };
 
