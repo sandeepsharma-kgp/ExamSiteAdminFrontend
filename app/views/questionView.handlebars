@@ -1,70 +1,62 @@
-
-  <div ng-controller="question">
-      <h2 style= "text-align : center; margin-bottom:25px"> Question List </h2>
-    <div class="row">
-      <div class='col-sm-12'>
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th class="text-center">
-                <input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" />
-              </th>
-              <th>Question Name</th>
-              <th>Option 1</th>
-              <th>Option 2</th>
-              <th>Option 3</th>
-              <th>Option 4</th>
-              <th>Level</th>
-              <th>Subject ID</th>
-              <th>Answer Key</th>
-              <th>Solution</th>
-              <th>Status</th>
-              <th>Image</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="ques in questionList">
-              <td class="text-center">
-                <input type="checkbox" ng-model="question.selected" ng-change="setSelectedquestion(question)"/>
-              </td>
-              <td> [[ques.questionName]] </td>
-              <td> [[ques.option1]]  <img src="/[[ques.imagepath]]" style = "width:75px; height:50px;" /> </td>
-              <td> [[ques.option2]]  <img src="/[[ques.imagepath]]" style = "width:75px; height:50px;" /> </td>
-              <td> [[ques.option3]]  <img src="/[[ques.imagepath]]" style = "width:75px; height:50px;" /> </td>
-              <td> [[ques.option4]]  <img src="/[[ques.imagepath]]" style = "width:75px; height:50px;" /> </td>
-              <td> [[ques.level]] </td>
-              <td> [[ques.SID]] </td>
-              <td> [[ques.answerKey]] </td>
-              <td> [[ques.solution]]  <img src="/[[ques.imagepath]]" style = "width:75px; height:50px;" /> </td></td>
-              <td> <strong>  [[ques.status]] </strong> </td>
-              <td> <img src="/[[ques.Image]]" style = "width:75px; height:50px;" /> </td>
-              <td><a class="btn btn-primary" href="/question/update/[[ques._id]]" style='margin-right:15px'>Edit</a>
+<div ng-controller="question">
+  <h2 style="text-align : center; margin-bottom:25px"> Question List </h2>
+  <div class="row">
+    <div class='col-sm-12'>
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th class="text-center">
+              <input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" />
+            </th>
+            <th>Question Name</th>
+            <th>Subject ID</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="ques in questionList">
+            <td class="text-center">
+              <input type="checkbox" ng-model="question.selected" ng-change="setSelectedquestion(question)" />
+            </td>
+            <td> [[ques.questionName]] </td>
+            {{!-- <td> [[ques.option1]] <img src="/[[ques.imagepath]]" style="width:75px; height:50px;" /> </td>
+            <td> [[ques.option2]] <img src="/[[ques.imagepath]]" style="width:75px; height:50px;" /> </td>
+            <td> [[ques.option3]] <img src="/[[ques.imagepath]]" style="width:75px; height:50px;" /> </td>
+            <td> [[ques.option4]] <img src="/[[ques.imagepath]]" style="width:75px; height:50px;" /> </td> --}}
+            <td> [[ques.SID]] </td>
+            {{!-- <td> [[ques.answerKey]] </td>
+            <td> [[ques.solution]] <img src="/[[ques.imagepath]]" style="width:75px; height:50px;" /> </td> --}}
+            </td>
+            <td> <strong> [[ques.status]] </strong> </td>
+            {{!-- <td> <img src="/[[ques.Image]]" style="width:75px; height:50px;" /> </td> --}}
+            <td><a class="btn btn-primary" href="/question/update/[[ques._id]]" style='margin-right:15px'>Edit</a>
               </a>
-                <button class="btn btn-danger" ng-click="delete(ques._id)" style='margin-right:15px'>Remove</button>
-                <a class="btn btn-success" href="/question/verify/[[ques._id]]" style='margin-right:15px'>Verify</a>
-              </td>
+              <button class="btn btn-danger" ng-click="delete(ques._id)" style='margin-right:15px'>Remove</button>
+              <a class="btn btn-success" href="/question/verify/[[ques._id]]" style='margin-right:15px'>Verify</a>
+              <a class="btn btn-info" href="/question/preview/[[ques._id]]" style='margin-right:15px'>Preview</a>
+            </td>
 
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <a class= "btn btn-primary" href= "/question/add" style = "margin-bottom : 20px"> Add question </a>
-    <br>
-    <a href ="/dashboard" > Go back </a>
-    </br>
 
   </div>
+  <a class="btn btn-primary" href="/question/add" style="margin-bottom : 20px"> Add question </a>
+  <br>
+  <a href="/dashboard"> Go back </a>
+  </br>
 
-  <script>
+</div>
 
+<script>
   app.controller("question", function($scope) {
     $scope.name = "@Checking";
     getquestions();
+
     function getquestions() {
-      $.get("/api/v1/question/all",function(result){
+      $.get("/api/v1/question/all", function(result) {
         $scope.questionList = result;
         $scope.$apply();
       });
@@ -72,10 +64,9 @@
 
     $scope.delete = function(id) {
       console.log(id);
-      $.get("/api/v1/question/delete/"+id,function(data){
+      $.get("/api/v1/question/delete/" + id, function(data) {
         window.location.reload(true);
       });
     }
   });
-
-  </script>
+</script>

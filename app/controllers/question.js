@@ -273,3 +273,7 @@ router.get('/question/update/:id', function(req, res){
 router.get('/question/verify/:id', function(req, res) {
   res.render('verifyQues', {question: req.questionID});
 });
+
+router.get('/question/preview/:id', function(req, res) {
+  res.render('questionPreview', {question: req.questionID});
+});
