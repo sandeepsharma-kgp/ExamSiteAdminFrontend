@@ -33,7 +33,7 @@
             <td><a class="btn btn-primary" href="/question/update/[[ques._id]]" style='margin-right:15px'>Edit</a>
               </a>
               <button class="btn btn-danger" ng-click="delete(ques._id)" style='margin-right:15px'>Remove</button>
-              <a class="btn btn-success" href="/question/verify/[[ques._id]]" style='margin-right:15px'>Verify</a>
+              <a class="btn btn-success" href="/question/verify/[[ques._id]]"  style='margin-right:15px'>Verify</a>
               <a class="btn btn-info" href="/question/preview/[[ques._id]]" style='margin-right:15px'>Preview</a>
             </td>
 
@@ -65,7 +65,8 @@
     $scope.delete = function(id) {
       console.log(id);
       $.get("/api/v1/question/delete/" + id, function(data) {
-        window.location.reload(true);
+        if(data)
+        location.reload();
       });
     }
   });

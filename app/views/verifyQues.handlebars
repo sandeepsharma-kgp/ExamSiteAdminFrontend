@@ -28,12 +28,6 @@
         <input type="text" class="form-control" name="level" placeholder="Level" ng-model = "level">
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="subject" placeholder="Subject" ng-model = "subject">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="topic" placeholder="Topic" ng-model = "topic">
-      </div>
-      <div class="form-group">
         <button type="submit"class="btn btn-success btn-lg btn-block" ng-click="updateData()"> Verify </button>
       </div>
       <div class="form-group">
@@ -64,8 +58,6 @@
           $scope.option3 = $scope.questionList.option3;
           $scope.option4 = $scope.questionList.option4;
           $scope.level = $scope.questionList.level;
-          $scope.subject = $scope.questionList.subject;
-          $scope.topic = $scope.questionList.topic;
           $scope.$apply();
 
         }
@@ -79,8 +71,6 @@
       data.option3 = $scope.option3;
       data.option4 = $scope.option4;
       data.Level = $scope.level;
-      data.subject = $scope.subject;
-      data.topic = $scope.topic;
       data.status = "Verified";
       console.log(data);
       $.post("/api/question/verify",data, function(result){

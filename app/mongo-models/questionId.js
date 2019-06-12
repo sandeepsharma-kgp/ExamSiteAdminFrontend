@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const  Schema = mongoose.Schema;
 
 const QuestionIDSchema = new Schema({
-  questionId: String,
+  questionId: [String],
   SID: String,
-  topic : []
+  topic : String
 
 }, {
     "freezeTableName": true

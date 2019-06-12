@@ -1,4 +1,4 @@
-<div class="container" ng-controller = "update">
+<div class="container" ng-controller="update">
   <h1 style="text-align: center"> Updating a question </h1>
   <div class="form-group" style="width: 50%; margin: 25px auto">
     <form>
@@ -9,80 +9,90 @@
       </div>
       <div class="form-group">
         <input type="text" class="form-control" name="questionName" placeholder="Question" ng-model="questionName">
+        <img src="/[[quesImage]]" style="width:75px; height:50px;" />
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="option1" placeholder=" Option 1" ng-model = "option1">
+        <input type="text" class="form-control" name="option1" placeholder=" Option 1" ng-model="option1">
+        <img src="/[[option1Image]]" style="width:75px; height:50px; margin-right:100px" />
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="option2" placeholder=" Option 2" ng-model = "option2">
+        <input type="text" class="form-control" name="option2" placeholder=" Option 2" ng-model="option2">
+        <img src="/[[option2Image]]" style="width:75px; height:50px; margin-right:100px" />
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="option3" placeholder=" Option 3" ng-model = "option3">
+        <input type="text" class="form-control" name="option3" placeholder=" Option 3" ng-model="option3">
+        <img src="/[[option3Image]]" style="width:75px; height:50px; margin-right:100px" />
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="option4" placeholder=" Option 4" ng-model = "option4">
+        <input type="text" class="form-control" name="option4" placeholder=" Option 4" ng-model="option4">
+        <img src="/[[option4Image]]" style="width:75px; height:50px; margin-right:100px" />
       </div>
       {{!-- <div class="form-group">
         <input type="text" class="form-control" name="level" placeholder="Level" ng-model = "level">
       </div> --}}
-      <select name="level" id="level" ng-model = "level">
+      <select name="level" id="level" ng-model="level">
         <option value="Beginner">Beginner</option>
         <option value="Amateur">Amateur</option>
         <option value="Advanced">Advanced</option>
         <option value="Expert">Expert</option>
       </select>
       <div class="form-group">
-        <input type="text" class="form-control" name="SID" placeholder="SID" ng-model = "SID">
+        <input type="text" class="form-control" name="SID" placeholder="SID" ng-model="SID">
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="topicId" placeholder="top[icId" ng-model = "topicId">
+        <input type="text" class="form-control" name="topicId" placeholder="top[icId" ng-model="topicId">
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="solution" placeholder="solution" ng-model = "solution">
+        <input type="text" class="form-control" name="solution" placeholder="solution" ng-model="solution">
       </div>
       <div class="dropdown">
         <h6> AnswerKey: </h6>
-        <input type="checkbox" name="answerKey1" value="A" ng-model="answerKey1" /> A
-        <input type="checkbox" name="answerKey2" value="B" ng-model="answerKey2" /> B
-        <input type="checkbox" name="answerKey3" value="C" ng-model="answerKey3" /> C
-        <input type="checkbox" name="answerKey4" value="D" ng-model="answerKey4" /> D
+        <input type="checkbox" name="answerKey1" ng-value="A" ng-model="answerKey1" /> A
+        <input type="checkbox" name="answerKey2" ng-value="B" ng-model="answerKey2" /> B
+        <input type="checkbox" name="answerKey3" ng-value="C" ng-model="answerKey3" /> C
+        <input type="checkbox" name="answerKey4" ng-value="D" ng-model="answerKey4" /> D
       </div>
       <div class="form-group">
-        <button type="submit"class="btn btn-primary btn-lg btn-block" ng-click="updateData()"> Submit </button>
+        <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="updateData()"> Submit </button>
       </div>
-      <a href= "/question/view"> Go back </a>
+      <a href="/question/view"> Go back </a>
     </form>
   </div>
 </div>
 
 <script>
-
   app.controller("update", function($scope) {
     $("#message").hide();
     var url = window.location.href;
     url = url.split("/");
     $scope.questionID = url[url.length - 1];
     console.log($scope.questionID);
-    $.get("/api/v1/question/update/" + $scope.questionID, function(data){
-        console.log(data);
-        if(data.length == 0) {
+    $.get("/api/v1/question/update/" + $scope.questionID, function(data) {
+      console.log(data);
+      if (data.length == 0) {
 
-        } else {
-          $scope.questionList = data[0];
-          $scope.questionName = $scope.questionList.questionName;
-          $scope.option1 = $scope.questionList.option1;
-          $scope.option2 = $scope.questionList.option2;
-          $scope.option3 = $scope.questionList.option3;
-          $scope.option4 = $scope.questionList.option4;
-          $scope.level = $scope.questionList.level;
-          $scope.SID = $scope.questionList.SID;
-          $scope.topicId = $scope.questionList.topicId;
-          [$scope.answerKey1, $scope.answerKey2, $scope.answerKey3, $scope.answerKey4] = $scope.questionList.answerKey;
-          $scope.solution = $scope.questionList.solution;
-          $scope.$apply();
+      } else {
+        $scope.questionList = data[0];
+        $scope.questionName = $scope.questionList.questionName;
+        $scope.option1 = $scope.questionList.option1;
+        $scope.option2 = $scope.questionList.option2;
+        $scope.option3 = $scope.questionList.option3;
+        $scope.option4 = $scope.questionList.option4;
+        $scope.level = $scope.questionList.level;
+        $scope.SID = $scope.questionList.SID;
+        $scope.topicId = $scope.questionList.topicId;
+        console.log($scope.questionList.answerKey);
+        // [$scope.answerKey1, $scope.answerKey2, $scope.answerKey3, $scope.answerKey4] = $scope.questionList.answerKey;
+        $scope.solution = $scope.questionList.solution;
+        [$scope.quesImage, $scope.option1Image, $scope.option2Image, $scope.option3Image, $scope.option4Image, $scope.solutionImage] = $scope.questionList.imagePath;
+        $scope.$apply();
 
-        }
+      }
     });
+    if($scope.answerKey1 == true)
+      $scope.answerKey1 = "A";
+      else
+        $scope.answerKey1 = null;
     $scope.updateData = function() {
       console.log("!");
       var data = {};
@@ -93,14 +103,15 @@
       data.option3 = $scope.option3;
       data.option4 = $scope.option4;
       data.level = $scope.level;
+      console.log($scope.answerKey1);
       data.answerKey = [$scope.answerKey1, $scope.answerKey2, $scope.answerKey3, $scope.answerKey4];
+      console.log(data.answerKey);
       data.solution = $scope.solution;
       console.log(data);
-      $.post("/api/question/update",data, function(result){
+      $.post("/api/question/update", data, function(result) {
         console.log("Updated successfully");
         $("#message").show();
       });
     }
-});
-
+  });
 </script>

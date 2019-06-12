@@ -112,16 +112,14 @@ router.post('/api/question/verify' , function(req, res)
   data = req.body;
   console.log(data);
   Question.updateOne({questionID: req.body.questionID}, {
-    $set:{ questionID : req.body.questionID,
+    $set:{
     questionName : req.body.questionName,
     option1 :req.body.option1,
     option2 : req.body.option2,
     option3 : req.body.option3,
     option4 : req.body.option4,
     level : req.body.level,
-    subject : req.body.subject,
-    topic : req.body.topic,
-    status : req.body.status    }}, function(err, result) {
+    status : "Verified"   }}, function(err, result) {
       if (err)
           return err;
       });
@@ -135,6 +133,7 @@ router.get('/api/v1/question/delete/:id', function (req, res) {
           console.log(err);
         else {
           console.log("Success");
+          res.json(results);
         }
     });
 

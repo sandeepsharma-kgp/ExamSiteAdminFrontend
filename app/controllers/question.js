@@ -218,6 +218,48 @@ router.post('/question/add', upload.fields(field), function (req, res)
           res.render('questionInput2', {successMessage: "Question added successfully to SID " + req.body.sid});
 
           var ques = new QuestionID();
+          // QuestionID.find({SID : req.body.sid}, function(err, data) {
+          //   if(err)
+          //   console.log(err);
+          //   else if(data.length) {
+          //     console.log("if data");
+          //   //   if(data[0].topicId) {
+          //   //   var topicId = data[0].topicId;
+          //   //   console.log(topicId);
+          //   //   var boolean = false;
+          //   //   console.log(topicId);
+          //   //   for(var i = 0; i<topicId.length; i++)  {
+          //   //       if(topicId[i]== req.body.topic1) {
+          //   //         boolean = true;
+          //   //       }
+          //   //   }     //for loop ends here
+          //   // // }
+          //   //   console.log(boolean);
+          //   //   if(boolean == false){
+          //         QuestionID.updateOne({SID: req.body.sid}, { $push: { "topic": req.body.topicId, "questionId": question._id }}, function(err, result) {
+          //             if (err)
+          //                 return err;
+          //             console.log("updated");
+          //         });
+          //     // }
+          //     // else if(boolean == true) {
+          //     //   console.log("topic already exists");
+          //     // }
+          //
+          //   }
+          //   else
+          //   {
+          //     // ques.topic = question.topicId;
+          //     // ques.SID = question.SID;
+          //     ques.questionId = question._id;
+          //     console.log("SID from ques", req.body.sid);
+          //     console.log("topicId from ques", req.body.topic1);
+          //     ques.topic = req.body.topic1;
+          //     ques.SID = req.body.sid;
+          //     ques.save();
+          //     console.log("done");
+          //   }
+          // });
           QuestionID.find({SID : req.body.sid}, function(err, data) {
             if(err)
             console.log(err);
