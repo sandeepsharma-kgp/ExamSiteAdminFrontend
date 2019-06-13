@@ -1,0 +1,101 @@
+<div class="container" ng-controller="search">
+  <h1 style="text-align: center"> Choose the categories </h1>
+  <div class="form-group" style="width: 30%; margin: 25px auto">
+    <form class="form-group">
+      <div>
+        <select name="subject" id="subject" style="margin-bottom: 15px" ng-model="subject" ng-click='showClass()'>
+          <option value="">--Select Subject--</option>
+          <option ng-repeat="sub in subjectList" value="[[sub.subjectName]]">[[sub.subjectName]]</option>
+        </select>
+      </div>
+      <select name="class" id="class" style="margin-bottom: 15px" ng-model="class" placeholder="Class" ng-change='showBoard()' ng-show='class'>
+        {{!-- <option value="" selected = "selected">--Select Class--</option> --}}
+        <option value="" selected disabled hidden>Choose here</option>
+        <option value="08">08</option>
+        <option value="09">09</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+      <select name="board" id="board" ng-model="board" ng-change='create()' ng-show='board'>
+        <option value="">--Select Board--</option>
+        <option value="CBSE">CBSE</option>
+        <option value="ICSE">ICSE</option>
+        <option value="JEEM">JEEMains</option>
+        <option value="JEEA">JEEAdvanced</option>
+        <option value="NEET">NEET</option>
+      </select>
+
+      <div class="row">
+        <select id="topicId" name="topic" ng-model="topicId" ng-show='topic' ng-click="showQues()">
+          <option class="col-md-6" ng-repeat="top in topicList | filter: check" value="[[top.topicId]]"> [[top.topicName]] </option>
+        </select>
+        <input class="col-md-4" type="text" autocomplete="off" ng-model="check" style="margin-bottom: 15px" placeholder="Filter" ng-show='topic'>
+        <br>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  app.controller("search", function($scope) {
+
+
+    getSubjects();
+
+    function getSubjects() {
+      $.get("/api/v1/uniqueSubject/all", function(data) {
+        console.log(data);
+        $scope.subjectList = data;
+        $scope.$apply();
+      });
+    }
+
+    $scope.class = false;
+    $scope.board = false;
+    $scope.topic = false;
+    $scope.showClass = function() {
+      $scope.class = true;
+    }
+    $scope.showBoard = function() {
+      $scope.board = true;
+    }
+
+    $scope.showques = true;
+    $scope.showQues = function() {
+      // $scope.showques = true;
+      console.log($scope.topicId);
+      $scope.topic1 = $scope.topicId;
+
+    }
+    $scope.create = function() {
+
+      $scope.topic = true;
+      var tempBoard = $scope.board;
+      console.log(typeof(tempBoard));
+      var boardInitials = tempBoard.substring(0, 4);
+      var temp = boardInitials.concat($scope.class);
+      var temp2 = $scope.subject.substring(0, 4).toUpperCase();
+      var SID = temp.concat(temp2);
+      console.log(SID);
+      $scope.sid = SID;
+
+      $.get("/api/v1/topic/mongo/" + SID, function(data) {
+        console.log(data);
+        var id = {};
+        id.data = data[0].topicId;
+        console.log(id);
+        $scope.$apply();
+        $.post("/api/v1/topic/name/", id, function(result) {
+          console.log("Name searching...");
+          console.log(result);
+          $scope.topicList = result;
+        });
+      });
+    }
+
+    $scope.retain = function() {
+      document.getElementById("myForm").reset();
+    }
+  });
+</script>

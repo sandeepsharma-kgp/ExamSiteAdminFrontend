@@ -1,8 +1,3 @@
-{{question}}
-{{question._id}}
-
-
-
 
 <div class="container" ng-controller="subject1">
   <h1 style="text-align: center"> Choose the categories </h1>
@@ -31,13 +26,6 @@
         <option value="NEET">NEET</option>
       </select>
 
-
-      <!-- <div>
-          <select name="topic" id="topic" style = "margin-bottom: 15px" ng-model = "topic" ng-show= 'topic'>
-            <option value="">--Select Topic--</option>
-            <option ng-repeat="top in topicList.topic" value="[[top]]">[[top]]</option>
-         </select>
-        </div> -->
       <div class="row">
         <select id="topicId" name="topic" ng-model="topicId" ng-show='topic' ng-click="showQues()">
           <option class="col-md-6" ng-repeat="top in topicList | filter: check" value="[[top.topicId]]"> [[top.topicName]] </option>
@@ -60,65 +48,82 @@
     </div>
   {{/if}}
 
-  
-  <h1 style="text-align: center"> Add a question </h1>
-  <div class="form-group" style="width: 30%; margin: 25px auto" ng-show='showques'>
-    <form class="form-group" id="myForm" enctype="multipart/form-data" method="POST" action="/question/add">
-      <div class="form-group">
-        <input type="text" class="form-control" name="questionName" placeholder="{{question.questionName}}" value={{question.questionName}}>
-        <input type="file" class="form-control" name="quesImage" placeholder="Upload" ng-model="uploadImage">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="option1" placeholder="{{question.option1}}" value={{question.option1}}>
-        <input type="file" class="form-control" name="option1Image" placeholder="Upload" <img src="/{{question.imagePath}}" style="width:75px; height:50px;" />>
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="option2" placeholder="{{question.option2}}" value={{question.option2}}>
-        <input type="file" class="form-control" name="option2Image" placeholder="Upload" ng-model="uploadImage">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="option3" placeholder="{{question.option3}}" value={{question.option3}}>
-        <input type="file" class="form-control" name="option3Image" placeholder="Upload" ng-model="uploadImage">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="option4" placeholder="{{question.option4}}" value={{question.option4}}>
-        <input type="file" class="form-control" name="option4Image" placeholder="Upload" ng-model="uploadImage">
-      </div>
-      <div>
-        <select name="level" id="level" value={{question.level}}>
-          <option value="Beginner">Beginner</option>
-          <option value="Amateur">Amateur</option>
-          <option value="Advanced">Advanced</option>
-          <option value="Expert">Expert</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="solution" placeholder="{{question.solution}}" value={{question.solution}}>
-        <input type="file" class="form-control" name="solImage" placeholder="Upload" ng-model="uploadImage">
-      </div>
-      <div class="dropdown">
-        <h6> AnswerKey: </h6>
-        <input type="checkbox" name="answerKey1" value="A" ng-model="answerKey1" /> A
-        <input type="checkbox" name="answerKey2" value="B" ng-model="answerKey2" /> B
-        <input type="checkbox" name="answerKey3" value="C" ng-model="answerKey3" /> C
-        <input type="checkbox" name="answerKey4" value="D" ng-model="answerKey4" /> D
-      </div>
-      <input type="text" name="sid" ng-model="sid" ng-hide=true value="[[sid]]"></input>
-      <input type="text" name="topic1" ng-model="topic1" ng-hide=true value="[[topic1]]"></input>
-      <input type="text" name="questionId" ng-hide=true value={{question._id}}></input>
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary btn-lg btn-block" name="check" value="update"> Add another </button>
-      </div>
-      <!-- <div class="form-group">
-          <a href= "/question/add"> <button type="submit"class="btn btn-primary btn-lg btn-block" href="/question/add"> Submit </button> </a>
-        </div> -->
-
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary btn-lg btn-block" name="check" value="new"> Submit </button>
-      </div>
-      <a href="/question/view"> Go back </a>
-    </form>
+  <div class="container">
+    <h5>Question ID: {{question._id}} </h5>
+    <table class="table table-striped table-bordered">
+      <tr>
+        <th>Subject ID</th>
+        <td>{{question.SID}}</td>
+      </tr>
+      <tr>
+        <th>Topic</th>
+        <td>
+          {{!-- <div ng-repeat="top in topicList"> [[top.topicName]] --}}
   </div>
+  </td>
+  </tr>
+  <tr>
+    <th> Question </th>
+    <td> {{question.questionName}} <img src="/{{question.imagePath.[0]}}" style="width:75px; height:50px;" /> </td>
+  </tr>
+  <tr>
+    <th colspan="2"> Options </th>
+  </tr>
+  <tr>
+    <td> A) {{question.option1}} <img src="/{{question.imagePath.[1]}}" style="width:75px; height:50px; margin-right:100px" /> </td>
+    <td> B) {{question.option2}} <img src="/{{question.imagePath.[2]}}" style="width:75px; height:50px;" /> </td>
+  </tr>
+  <tr>
+    <td>
+      C) {{question.option3}} <img src="/{{question.imagePath.[3]}}" style="width:75px; height:50px; margin-right:100px; margin-top:50px" />
+    </td>
+    <td>
+      D) {{question.option4}} <img src="/{{question.imagePath.[4]}}" style="width:75px; height:50px;" />
+    </td>
+  </tr>
+  <tr>
+    <th> AnswerKey </th>
+    {{!-- <td> <span ng-repeat="ans in questionList.answerKey"> <strong> [[ans]] </strong> </span> </td> --}}
+
+    <td> {{question.answerKey}} </td>
+  </tr>
+  <tr>
+    <th>Solution</th>
+    <td>{{question.solution}} <img src="/{{question.imagePath.[5]}}" style="width:75px; height:50px;" /></td>
+  </tr>
+  <tr>
+    <th>Level</th>
+    <td>{{question.level}}</td>
+  </tr>
+  <tr>
+    <th>Status</th>
+    <td>{{question.status}}</td>
+  </tr>
+
+  </table>
+</div>
+{{!--
+  var id = {};
+  id.data = data[0].topicId;
+  $.post("/api/v1/topic/name/", id, function(result) {
+    console.log("Name searching...");
+    console.log(result);
+    $scope.topicList = result;
+    $scope.$apply(); --}}
+<div class="form-group" style="width: 30%; margin: 25px auto" ng-show='showques'>
+  <form class="form-group" id="myForm" enctype="multipart/form-data" method="POST" action="/question/add">
+    <input type="text" name="sid" ng-model="sid" ng-hide=true value="[[sid]]"></input>
+    <input type="text" name="topic1" ng-model="topic1" ng-hide=true value="[[topic1]]"></input>
+    <input type="text" name="questionId" ng-hide=true value={{question._id}}></input>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary btn-lg btn-block" name="check" value="update"> Add another </button>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary btn-lg btn-block" name="check" value="new"> Submit </button>
+    </div>
+    <a href="/question/view"> Go back </a>
+  </form>
+</div>
 </div>
 
 
