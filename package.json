@@ -11,6 +11,7 @@
     "test:integration": "mocha --recursive test/integration"
   },
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.13.3",
     "compression": "^1.5.2",
     "connect-flash": "^0.1.1",
@@ -24,6 +25,7 @@
     "flash": "^1.1.0",
     "fs": "0.0.1-security",
     "glob": "^6.0.4",
+    "jsonwebtoken": "^8.5.1",
     "memory": "0.0.3",
     "method-override": "^2.3.0",
     "mongoose": "^5.5.6",
@@ -31,6 +33,7 @@
     "multer": "^1.4.1",
     "mysql": "^2.8.0",
     "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "peer": "^0.2.10",
     "sequelize": "^3.5.1",

@@ -10,6 +10,7 @@ var con = require('../../config/db')
 var multer = require('multer');
 const Subject = require('../models/subject');
 var Question = require('../mongo-models/index');
+var QuestionID = require('../mongo-models/questionId');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var session = require('express-session');
@@ -105,6 +106,19 @@ router.post('/api/question/update' , function(req, res)
           return err;
     });
     res.send("done");
+});
+
+router.post('/api/v1/question/search', function(req, res)
+{
+
+  data = req.body;
+  console.log(data);
+  QuestionID.find({SID: data.SID}, function(err, result){
+    res.json(result);
+  }).catch(function(err) {
+    res.status(400).json({ error: err })
+    return;
+  });
 });
 
 router.post('/api/question/verify' , function(req, res)
