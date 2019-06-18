@@ -67,18 +67,29 @@ router.post("/login", passport.authenticate('login', {
 });
 
 function isAuthenticated(req, res, next) {
-  if (req.isAuthenticated())
-    return next();
+  if (req.isAuthenticated()){
+    if(req.user.roleId == 2|| req.user.roleId == 3)
+      return next();
+  }
   res.redirect('/login');
 }
 
-router.get('/loginfailed', function(req, res) {
+
+function isAuthenticatedAdmin(req, res, next) {
+  if (req.isAuthenticated()){
+    if(req.user.roleId == 3)
+      return next();
+  }
+  res.redirect('/login');
+}
+
+router.get('/loginfailed', function(req, res, authorizedStatus) {
   res.render('loginPage', {
     errorMessage: req.flash('loginMessage')
   });
 });
 
-router.get('/dashboard', function(req, res) {
+router.get('/dashboard',isAuthenticated, function(req, res) {
   console.log(req.user)
   res.render('dashboard', {
     layout: "homeLayout",
@@ -115,10 +126,11 @@ router.post("/register", function(req, res) {
         db.User.create({
           name: req.body.name,
           email: req.body.email,
-          password: password
+          password: password,
+          roleId : "2"
         });
         // console.log(password);
-        return password;
+        // return password;
 
         //>>query logic should go here.
       });
@@ -145,3 +157,28 @@ function checkloginstate(req, res, next) {
     res.redirect('/login');
   }
 };
+// var userRoles = {
+//     guest: 1,    // ...001
+//     user: 2,     // ...010
+//     admin: 3     // ...100
+// };
+//
+// accessLevels = {
+//     guest: userRoles.guest | userRoles.user | userRoles.admin,    // ...111
+//     user: userRoles.user | userRoles.admin,                       // ...110
+//     admin: userRoles.admin                                        // ...100
+// };
+//
+// function allowOnly(accessLevel, callback) {
+//     function checkUserRole(req, res) {
+//         if(!(accessLevel & req.user.roleId)) {
+//             // res.sendStatus(403);
+//             res.send("User not authenticated");
+//             return;
+//         }
+//
+//         callback(req, res);
+//     }
+//
+//     return checkUserRole;
+// };
