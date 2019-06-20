@@ -35,6 +35,43 @@
       </div>
     </form>
   </div>
+
+  <h2 style="text-align : center; margin-bottom:25px"> Question List </h2>
+  <div class="row">
+    <div class='col-sm-12'>
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th class="text-center">
+              <input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" />
+            </th>
+            <th>Question Name</th>
+            <th>Subject ID</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="ques in questionList">
+            <td class="text-center">
+              <input type="checkbox" ng-model="question.selected" ng-change="setSelectedquestion(question)" />
+            </td>
+            <td> [[ques.questionName]] </td>
+            <td> [[ques.SID]] </td>
+            </td>
+            <td> <strong> [[ques.status]] </strong> </td>
+            <td><a class="btn btn-primary" href="/question/update/[[ques._id]]" style='margin-right:15px'>Edit</a>
+              </a>
+              <button class="btn btn-danger" ng-click="delete(ques._id)" style='margin-right:15px'>Remove</button>
+              <a class="btn btn-success" href="/question/verify/[[ques._id]]" style='margin-right:15px'>Verify</a>
+              <a class="btn btn-info" href="/question/preview/[[ques._id]]" style='margin-right:15px'>Preview</a>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -60,7 +97,7 @@
       $scope.board = true;
     }
 
-    $scope.showques = true;
+    $scope.showques = false;
     $scope.create = function() {
 
       $scope.topic = true;
@@ -73,13 +110,15 @@
       $scope.sid = SID;
 
       $scope.showQues = function() {
-        // $scope.showques = true;
+        $scope.showques = true;
         $scope.topic1 = $scope.topicId;
         var id1 = {};
         id1.SID = SID;
         id1.topicId = $scope.topicId;
         $.post("/api/v1/question/search/", id1, function(results) {
           $scope.questionList = results;
+          console.log(results);
+          $scope.$apply();
         });
 
       }
@@ -92,7 +131,6 @@
           $scope.topicList = result;
         });
       });
-
 
     }
   });

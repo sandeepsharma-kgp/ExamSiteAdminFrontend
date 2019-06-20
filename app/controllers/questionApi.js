@@ -142,14 +142,17 @@ router.get('/api/v1/question/delete/:id', function (req, res) {
 
 router.post('/api/v1/question/search', function(req, res){
   data = req.body;
-  console.log(data);
   QuestionID.find({"SID" : data.SID , "topic" : data.topicId}, function(err, results){
     if(err)
       res.send(err);
     else {
-      console.log(results);
-      // res.json(results);
-      // Question.find({"_id" : results[0].})
+      var ar = results[0];
+      if(ar)
+      {
+        Question.find({"_id" : ar.questionId}, function(err,result){
+          res.json(result);
+        });
+      }
     }
   })
 });
