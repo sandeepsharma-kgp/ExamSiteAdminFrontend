@@ -14,33 +14,19 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var bcrypt = require('bcrypt');
 
-var crypto = require('crypto');
-var LocalStrategy = require('passport-local').Strategy;
-var Store = require('express-session').Store;
-var BetterMemoryStore = require('session-memory-store')(session);
-
-var store = new BetterMemoryStore({
-  expires: 60 * 60 * 1000,
-  debug: true
-});
-router.use(session({
-  name: 'JSESSION',
-  secret: 'nitrkl',
-  store: store,
-  resave: true,
-  saveUninitialized: true
-}));
-
-
-router.use(session({
-  secret: 'nitrkl',
-  saveUninitialized: false,
-  resave: false
-})); // session secret
+var hookJWTStrategy = require('./services/passportStrategy');
+// 6: Hook up Passport.
 router.use(passport.initialize());
-router.use(passport.session()); // persistent login sessions
-require('../../config/passport')(passport);
-router.use(flash());
+
+// Hook the passport JWT strategy.
+hookJWTStrategy(passport);
+
+//
+// router.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false})); // session secret
+// router.use(passport.initialize());
+// router.use(passport.session()); // persistent login sessions
+// require('../../config/passport')(passport);
+// router.use(flash());
 
 module.exports = (app) => {
   app.use('/', router);

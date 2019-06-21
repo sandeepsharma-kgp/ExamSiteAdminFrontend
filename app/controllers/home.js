@@ -20,6 +20,19 @@ module.exports = (app) => {
   app.use('/', router);
 };
 
+exports.allowOnly = function(accessLevel, callback) {
+    function checkUserRole(req, res) {
+        if(!(accessLevel & req.user.role)) {
+            res.sendStatus(403);
+            return;
+        }
+
+        callback(req, res);
+    }
+
+    return checkUserRole;
+};
+
 router.get('/', function(req,res){
   res.redirect("/login");
 });
