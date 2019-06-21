@@ -1,40 +1,70 @@
-
-
-<div class="container" ng-controller = "verify">
-  <h1 style="text-align: center"> Verify Question </h1>
-  <div class="form-group" style="width: 50%; margin: 25px auto">
-    <form>
-      <div class="form-group">
-        <div id="message" class="alert alert-success" role="alert">
-          Data updated successfully
+<div class="container" ng-controller="verify">
+  <h5> Question ID : [[questionList._id]]</h5>
+  <div class="form-group">
+    <div id="message" class="alert alert-success" role="alert">
+      Data updated successfully
+    </div>
+  </div>
+  <table class="table table-striped table-bordered">
+    <tr>
+      <th>Subject ID</th>
+      <td>[[questionList.SID]]</td>
+    </tr>
+    <tr>
+      <th>Topic</th>
+      <td>
+        <div ng-repeat="top in topicList"> [[top.topicName]]
         </div>
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="questionName" placeholder="Question" ng-model="questionName">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="option1" placeholder=" Option 1" ng-model = "option1">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="option2" placeholder=" Option 2" ng-model = "option2">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="option3" placeholder=" Option 3" ng-model = "option3">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="option4" placeholder=" Option 4" ng-model = "option4">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="level" placeholder="Level" ng-model = "level">
-      </div>
-      <div class="form-group">
-        <button type="submit"class="btn btn-success btn-lg btn-block" ng-click="updateData()"> Verify </button>
-      </div>
-      <div class="form-group">
-        <button type="submit"class="btn btn-danger btn-lg btn-block" > Cancel </button>
-      </div>
-      <a href= "/question/view"> Go back </a>
-    </form>
+      </td>
+    </tr>
+    <tr>
+      <th> Question </th>
+      <td> [[questionList.questionName]] <img src="/[[quesImage]]" style="width:75px; height:50px;" /> </td>
+    </tr>
+    <tr>
+      <th colspan="2"> Options </th>
+    </tr>
+    <tr>
+      <td> A) [[questionList.option1]] <img src="/[[option1Image]]" style="width:75px; height:50px; margin-right:100px" /> </td>
+      <td> B) [[questionList.option2]] <img src="/[[option2Image]]" style="width:75px; height:50px;" /> </td>
+    </tr>
+    <tr>
+      <td>
+        C) [[questionList.option3]] <img src="/[[option3Image]]" style="width:75px; height:50px; margin-right:100px; margin-top:50px" />
+      </td>
+      <td>
+        D) [[questionList.option4]] <img src="/[[option4Image]]" style="width:75px; height:50px;" />
+      </td>
+    </tr>
+    <tr>
+      <th> AnswerKey </th>
+      <td> <span ng-repeat="ans in questionList.answerKey"> <strong> [[ans]] </strong> </span> </td>
+    </tr>
+    <tr>
+      <th>Solution</th>
+      <td>[[questionList.solution]] <img src="/[[solutionImage]]" style="width:75px; height:50px;" /></td>
+    </tr>
+    <tr>
+      <th>Level</th>
+      <td>[[questionList.level]]</td>
+    </tr>
+    <tr>
+      <th>Status</th>
+      <td>[[questionList.status]]</td>
+    </tr>
+
+  </table>
+  <div class="form-group">
+    <input type="text" class="form-control" name="qid" ng-hide= true ng-model = "questionId">
+  </div>
+  <div class="form-group" style="width: 30%; margin: 25px auto">
+    <button type="submit"class="btn btn-success btn-lg btn-block" ng-click="updateData()"> Verify </button>
+  </div>
+  <div class="form-group"style="width: 30%; margin: 25px auto">
+    <button type="submit"class="btn btn-danger btn-lg btn-block" > Cancel </button>
+  </div>
+  <div class="form-group">
+    <a href = "/question/view"> Go back </a>
   </div>
 </div>
 
@@ -58,6 +88,17 @@
           $scope.option3 = $scope.questionList.option3;
           $scope.option4 = $scope.questionList.option4;
           $scope.level = $scope.questionList.level;
+          [$scope.quesImage, $scope.option1Image, $scope.option2Image, $scope.option3Image, $scope.option4Image, $scope.solutionImage] = $scope.questionList.imagePath;
+          console.log($scope.option1Image);
+          var id = {};
+          id.data = data[0].topicId;
+          $.post("/api/v1/topic/name/", id, function(result) {
+            console.log("Name searching...");
+            console.log(result);
+            $scope.topicList = result;
+            $scope.$apply();
+          });
+          $scope.questionId = $scope._id;
           $scope.$apply();
 
         }
@@ -65,12 +106,7 @@
     $scope.updateData = function() {
       console.log("!");
       var data = {};
-      data.questionName = $scope.questionName;
-      data.option1 = $scope.option1;
-      data.option2 = $scope.option2;
-      data.option3 = $scope.option3;
-      data.option4 = $scope.option4;
-      data.Level = $scope.level;
+      data.questionId = $scope.questionId;
       data.status = "Verified";
       console.log(data);
       $.post("/api/question/verify",data, function(result){
