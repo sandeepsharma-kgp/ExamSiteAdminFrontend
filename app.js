@@ -15,14 +15,7 @@ require('./config/passport')(passport); // pass passport for configuration
 app.use('/uploads', express.static('uploads'));
 
 module.exports = require('./config/express')(app, config);
-// 
-// // Bundle API routes.
-// app.use('/api', require('./app/cocntrollers/api')(passport));
-//
-// // Catch all route.
-// app.get('*', function(req, res) {
-//     res.sendFile(path.join(__dirname + '../../public/app/views/index.html'));
-// });
+
 
 db.sequelize
   .sync()

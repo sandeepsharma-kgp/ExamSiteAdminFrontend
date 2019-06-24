@@ -13,11 +13,11 @@ const config = {
   development: {
     root: rootPath,
     app: {
-      name: 'examsiteadminfrontend'
+      name: process.env.DB_NAME
     },
     port: process.env.PORT || 3000,
-    db: 'mysql://' + process.env.DB_USER + ':' +  process.env.DB_PASS + '@' + process.env.DB_HOST + '/examsiteadminfrontend_development',
-    mongodb: 'mongodb://' + process.env.DB_HOST + '/examsiteadminfrontend_development'
+    db: 'mysql://' + process.env.DB_USER + ':' +  process.env.DB_PASS + '@' + process.env.DB_HOST + '/' + process.env.DB_SQL,
+    mongodb: 'mongodb://' + process.env.DB_HOST + '/' + process.env.DB_MONGO
 
   },
 
@@ -33,23 +33,13 @@ const config = {
   production: {
     root: rootPath,
     app: {
-      name: 'examsiteadminfrontend'
+      name: process.env.DB_NAME
     },
     port: process.env.PORT || 3000,
-    db: 'mysql://' + process.env.DB_HOST + '/examsiteadminfrontend-production'
+    db: 'mysql://' + process.env.DB_HOST + '/' + process.env.DB_SQL + '-production'
   }
 };
 
-var userRoles = config.userRoles = {
-    guest: 1,    // ...001
-    user: 2,     // ...010
-    admin: 4     // ...100
-};
 
-config.accessLevels = {
-    guest: userRoles.guest | userRoles.user | userRoles.admin,    // ...111
-    user: userRoles.user | userRoles.admin,                       // ...110
-    admin: userRoles.admin                                        // ...100
-};
 
 module.exports = config[env];

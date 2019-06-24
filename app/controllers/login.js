@@ -14,12 +14,9 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var bcrypt = require('bcrypt');
 
-var hookJWTStrategy = require('./services/passportStrategy');
 // 6: Hook up Passport.
 router.use(passport.initialize());
 
-// Hook the passport JWT strategy.
-hookJWTStrategy(passport);
 
 //
 // router.use(session({ secret: 'nitrkl' ,saveUninitialized: false, resave: false})); // session secret
