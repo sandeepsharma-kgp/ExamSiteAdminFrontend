@@ -123,19 +123,6 @@ router.post('/api/question/update', function(req, res) {
   res.send("done");
 });
 
-router.post('/api/v1/question/search', function(req, res)
-{
-
-  data = req.body;
-  console.log(data);
-  QuestionID.find({SID: data.SID}, function(err, result){
-    res.json(result);
-  }).catch(function(err) {
-    res.status(400).json({ error: err })
-    return;
-  });
-});
-
 router.post('/api/question/verify' , function(req, res)
 {
   data = req.body;
@@ -180,11 +167,14 @@ router.post('/api/v1/question/search', function(req, res) {
       res.send(err);
     else {
       var ar = results[0];
+      console.log(results);
+      console.log(ar, "From ar");
       if (ar) {
         Question.find({
           "_id": ar.questionId
         }, function(err, result) {
           res.json(result);
+          console.log(result);
         });
       }
     }
