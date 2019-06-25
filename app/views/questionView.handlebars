@@ -58,6 +58,7 @@
     function getquestions() {
       $.get("/api/v1/question/all", function(result) {
         $scope.questionList = result;
+        console.log(result);
         $scope.$apply();
       });
     }

@@ -25,14 +25,14 @@
         <option value="JEEA">JEEAdvanced</option>
         <option value="NEET">NEET</option>
       </select>
-
+{{!--
       <div class="row">
         <select id="topicId" name="topic" ng-model="topicId" ng-show='topic' ng-click="showQues()">
           <option class="col-md-6" ng-repeat="top in topicList | filter: check" value="[[top.topicId]]"> [[top.topicName]] </option>
         </select>
         <input class="col-md-4" type="text" autocomplete="off" ng-model="check" style="margin-bottom: 15px" placeholder="Filter" ng-show='topic'>
         <br>
-      </div>
+      </div> --}}
     </form>
   </div>
 
@@ -114,36 +114,30 @@
       var temp2 = $scope.subject.substring(0, 4).toUpperCase();
       var SID = temp.concat(temp2);
       $scope.sid = SID;
+      var id1 = {};
+      id1.SID = SID;
+      // id1.topicId = $scope.topicId;
+      $.post("/api/v1/question/search2/", id1, function(results) {
+        $scope.questionList = results;
+        console.log(results);
+        $scope.$apply();
+      });
 
       $scope.showQues = function() {
         $scope.showques = true;
-        $scope.topic1 = $scope.topicId;
-        var id1 = {};
-        id1.SID = SID;
-        id1.topicId = $scope.topicId;
-        $.post("/api/v1/question/search/", id1, function(results) {
-          $scope.questionList = results;
-          console.log(results);
-          $scope.$apply();
-        });
+        // $scope.topic1 = $scope.topicId;
+
 
       }
-
-      $.get("/api/v1/topic/mongo/" + SID, function(data) {
-        var id = {};
-        id.data = data[0].topicId;
-        $scope.$apply();
-        $.post("/api/v1/topic/name/", id, function(result) {
-          $scope.topicList = result;
-        });
-      });
-      var list = {};
-      list.SID = SID;
-
-      $.post("/api/v1/question/search/", list, function(data){
-        console.log(data);
-        $scope.questionList = data;
-      });
+      //
+      // $.get("/api/v1/topic/mongo/" + SID, function(data) {
+      //   var id = {};
+      //   id.data = data[0].topicId;
+      //   $scope.$apply();
+      //   $.post("/api/v1/topic/name/", id, function(result) {
+      //     $scope.topicList = result;
+      //   });
+      // });
     }
   });
 </script>

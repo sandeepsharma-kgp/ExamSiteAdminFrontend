@@ -137,13 +137,6 @@
           $scope.topicList = result;
         });
       });
-      var list = {};
-      list.SID = SID;
-
-      $.post("/api/v1/question/search/", list, function(data){
-        console.log(data);
-        $scope.questionList = data;
-      });
     }
   });
 </script>

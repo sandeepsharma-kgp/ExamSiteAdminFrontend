@@ -123,8 +123,7 @@ router.post('/api/question/update', function(req, res) {
   res.send("done");
 });
 
-router.post('/api/question/verify' , function(req, res)
-{
+router.post('/api/question/verify', function(req, res) {
   data = req.body;
   console.log(data);
   Question.updateOne({
@@ -179,4 +178,13 @@ router.post('/api/v1/question/search', function(req, res) {
       }
     }
   })
+});
+
+router.post('/api/v1/question/search2', function(req, res) {
+  data = req.body;
+  Question.find({
+    "SID": data.SID
+  }, function(err, result) {
+    res.json(result);
+  });
 });

@@ -370,6 +370,10 @@ router.get('/question/search', function(req, res){
   res.render("questionSearch");
 });
 
+router.get('/question/search2', function(req, res){
+  res.render("questionSearch2");
+});
+
 
 router.get('/question/update/:id', function(req, res) {
   res.render('updateQuestion', {
