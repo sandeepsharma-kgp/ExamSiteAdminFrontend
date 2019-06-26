@@ -1,4 +1,5 @@
-
+{{question._id}}
+{{question}}
 <div class="container" ng-controller="subject1">
   <h1 style="text-align: center"> Choose the categories </h1>
   <div class="form-group" style="width: 30%; margin: 25px auto">
@@ -49,7 +50,7 @@
   {{/if}}
 
   <div class="container">
-    <h5>Question ID: {{question._id}} </h5>
+    <h5 name = "questionId" >Question ID: {{question._id}} </h5>
     <table class="table table-striped table-bordered">
       <tr>
         <th>Subject ID</th>

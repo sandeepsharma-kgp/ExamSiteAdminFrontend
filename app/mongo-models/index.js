@@ -14,8 +14,6 @@ const QuestionSchema = new Schema({
   option4Image : String,
   imagePath : [String],
   level : String,
-  SID : String,
-  topicId : [String],
   Image : String,
   answerKey : [String],
   solution : String,
