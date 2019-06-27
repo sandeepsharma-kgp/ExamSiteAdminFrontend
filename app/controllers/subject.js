@@ -51,57 +51,6 @@ router.get('/subject/add', function(req, res)
 
 });
 
-// router.post('/subject/add',isAuthenticated , function(req, res)
-// {
-//   db.Subject.findAll({where : {name : req.body.name}})
-//   console.log(req.body.class);
-//   var boardInitials = req.body.board.substring(0,4);
-//   var new2 = boardInitials.concat(req.body.class);
-//   var new4 = req.body.subjectName.substring(0,4);
-//   var new5 = new4.toUpperCase();
-//   console.log(new5);
-//   var new3 = new2.concat(new5);
-//   console.log(new3);
-//   var sqlQuery = "SELECT * FROM Subjects WHERE SID = ? LIMIT 1";
-//   con.query(sqlQuery, [new3], function(error, results){
-//   // There was an issue with the query
-//     if(error){
-//     console.log(error);
-//     return ;
-//     }
-//
-//     if(results.length){
-//     // The username already exists
-//       console.log("Id exists");
-//         res.render("subjectInput", { errorMessage: "Subject already exists with SID "+ new3});
-//
-//     }else{
-//     // The username wasn't found in the database
-//       console.log("ID doesnt exist");
-//         db.Subject.create({
-//           subjectName: req.body.subjectName,
-//           class: req.body.class,
-//           board: req.body.board,
-//           SID : new3
-//         });
-//         db.uniqueSubject.findAll({ where: {subjectName : req.body.subjectName}}).then(function(results) {
-//           if(results!=0)
-//           console.log("Not a unique subject");
-//           else {
-//             db.uniqueSubject.create({
-//             subjectName: req.body.subjectName,
-//               })
-//               }
-//         }).catch(function(err) {
-//           res.status(400).json({ error: err })
-//           return;
-//         });
-//       res.render("subjectInput", { successMessage: "Subject is added successfully with SID " + new3});
-//       }
-//       });
-// });
-
-
 router.get('/subject/update/:id' , function(req, res) {
   res.render("updateSubject");
 });

@@ -25,14 +25,7 @@
         <option value="JEEA">JEEAdvanced</option>
         <option value="NEET">NEET</option>
       </select>
-{{!--
-      <div class="row">
-        <select id="topicId" name="topic" ng-model="topicId" ng-show='topic' ng-click="showQues()">
-          <option class="col-md-6" ng-repeat="top in topicList | filter: check" value="[[top.topicId]]"> [[top.topicName]] </option>
-        </select>
-        <input class="col-md-4" type="text" autocomplete="off" ng-model="check" style="margin-bottom: 15px" placeholder="Filter" ng-show='topic'>
-        <br>
-      </div> --}}
+
     </form>
   </div>
 
@@ -129,15 +122,7 @@
 
 
       }
-      //
-      // $.get("/api/v1/topic/mongo/" + SID, function(data) {
-      //   var id = {};
-      //   id.data = data[0].topicId;
-      //   $scope.$apply();
-      //   $.post("/api/v1/topic/name/", id, function(result) {
-      //     $scope.topicList = result;
-      //   });
-      // });
+
     }
   });
 </script>

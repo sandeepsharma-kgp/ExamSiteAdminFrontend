@@ -125,22 +125,6 @@ router.get('/topic/search' , function(req, res)
 
 });
 
-// router.post('/topic/search' , function(req, res) {
-//
-//   // update statment
-//   var sql = `SELECT topicName FROM  Topics
-//              WHERE topicID = ?`;
-//
-//   // execute the UPDATE statement
-//   con.query(sql, req.body.topicName, function(error, results) {
-//     if (error){
-//       return console.error(error.message);
-//     }
-//     console.log(results);
-//   });
-//   res.redirect("/topic/search");
-// });
-
 router.get('/topic/view' , function (req, res)
 {
   var quer2 = "SELECT * FROM Topics";
