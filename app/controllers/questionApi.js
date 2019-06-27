@@ -10,6 +10,8 @@ var multer = require('multer');
 const Subject = require('../models/subject');
 var Question = require('../mongo-models/index');
 var QuestionID = require('../mongo-models/questionId');
+var SubjectArray = require('../mongo-models/subjectSearch');
+
 var passport = require('passport');
 var flash = require('connect-flash');
 var session = require('express-session');
@@ -182,9 +184,16 @@ router.post('/api/v1/question/search', function(req, res) {
 
 router.post('/api/v1/question/search2', function(req, res) {
   data = req.body;
-  Question.find({
+  SubjectArray.find({
     "SID": data.SID
   }, function(err, result) {
-    res.json(result);
+    temp = result[0];
+    console.log(temp)
+    Question.find({
+      "_id": temp.questionId
+    }, function(err, result) {
+      res.json(result);
+      console.log(result)
+    });
   });
 });
