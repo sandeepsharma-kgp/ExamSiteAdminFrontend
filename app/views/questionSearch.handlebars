@@ -114,6 +114,13 @@
       var temp2 = $scope.subject.substring(0, 4).toUpperCase();
       var SID = temp.concat(temp2);
       $scope.sid = SID;
+      var id = {};
+      id.SID = SID;
+      $.post("/api/v1/question/search2/", id, function(results) {
+        $scope.questionList = results;
+        console.log(results);
+        $scope.$apply();
+      });
 
       $scope.showQues = function() {
         $scope.showques = true;
@@ -130,12 +137,19 @@
       }
 
       $.get("/api/v1/topic/mongo/" + SID, function(data) {
-        var id = {};
-        id.data = data[0].topicId;
+        var id2 = {};
+        id2.data = data[0].topicId;
         $scope.$apply();
-        $.post("/api/v1/topic/name/", id, function(result) {
+        $.post("/api/v1/topic/name/", id2, function(result) {
           $scope.topicList = result;
         });
+      });
+    }
+    $scope.delete = function(id) {
+      console.log(id);
+      $.get("/api/v1/question/delete/" + id, function(data) {
+        if(data)
+        location.reload();
       });
     }
   });
