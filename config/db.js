@@ -5,10 +5,10 @@ const mongoose = require('mongoose');
 const config = require('./config');
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "Turbo",
-  password: "temp12345",
-  database: "examsiteadminfrontend_development"
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_SQL
 });
 console.log("Connection created!!");
 
