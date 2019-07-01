@@ -91,6 +91,7 @@ router.get("/register", function(req, res) {
 });
 
 router.post("/register", function(req, res) {
+  console.log(req.body);
   var password = req.body.password;
   db.User.findAll({
     where: {
@@ -112,13 +113,9 @@ router.post("/register", function(req, res) {
           password: password,
           roleId : "2"
         });
-        // console.log(password);
-        // return password;
-
-        //>>query logic should go here.
       });
 
-      res.redirect('/login?register=success');
+      res.redirect('/login');
     }
   }).catch(function(err) {
     res.status(400).json({
