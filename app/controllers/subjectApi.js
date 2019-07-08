@@ -64,7 +64,7 @@ router.post('/api/v1/subject/add', function (req, res) {
   });
 });
 
-router.get('/api/v1/subject/update/:id', function (req, res) {
+  router.get('/api/v1/subject/edit/:id', function (req, res) {
 
   console.log(req.params.id);
   db.subject.findAll({ where: {SID : req.params.id}}).then(function(data) {
@@ -84,19 +84,6 @@ router.post('/api/subject/update' , function(req, res)
   console.log(subject);
   console.log(data.SID);
   console.log(data.subjectName);
-  // var sqlQuery = "UPDATE Subjects SET SID = ?, subjectName = ? WHERE SID = ?;";
-  // con.query(sqlQuery, subject, function(error, results){
-  //   // There was an issue with the query
-  //   if(error){
-  //     console.log(error);
-  //     return;
-  //   }
-  //
-  //   if(results.length){
-  //     // The username already exists
-  //     console.log("Updated");
-  //   }
-  // });
   db.subject.update(
    {subjectName: data.subjectName},
    {where: {SID: data.SID}}).then(function(data) {
@@ -134,10 +121,12 @@ router.get('/api/v1/subject/delete/:id' , function (req, res) {
    }}).then(function(rowDeleted){ // rowDeleted will return number of rows deleted
       if(rowDeleted === 1){
          console.log('Deleted successfully');
+         res.json({successMessage: "Subject deleted successfully"});
        }
        console.log(rowDeleted);
     }, function(err){
         console.log(err);
+        res.json({errorMessage: err});
         return;
     });
 

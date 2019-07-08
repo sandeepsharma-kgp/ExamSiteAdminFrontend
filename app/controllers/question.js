@@ -108,7 +108,11 @@ var field = [{
   maxCount: 1
 }];
 
-router.post('/question/add', upload.fields(field), function(req, res) {
+router.post('/question/add',  multer({dest: "./uploads/"}).array("uploads", 12), function(req, res) {
+  // console.log(req.body['file']);
+  console.log(req);
+  console.log(req.file);
+  console.log(req.fileS);
   var question = new Question();
   var sub = new SubjectArray();
   console.log(req.body, "heaed body");
@@ -240,12 +244,7 @@ router.post('/question/add', upload.fields(field), function(req, res) {
       question.subject = req.body.subject;
       question.solution = req.body.solution;
       question.status = "Skipped";
-      question.answerKey = [req.body.answerKey1, req.body.answerKey2, req.body.answerKey3, req.body.answerKey4];
-      var filtered = question.answerKey.filter(function(el) {
-        return el != null;
-      });
-      console.log(filtered);
-      question.answerKey = filtered; //removed null values in array
+      question.answerKey = req.body.answerKey; //removed null values in array
       console.log(question);
       console.log(question._id);
       question.save();

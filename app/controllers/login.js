@@ -115,7 +115,7 @@ router.post("/register", function(req, res) {
         });
       });
 
-      res.redirect('/login');
+      res.send({successMessage: "User registered successfully"});
     }
   }).catch(function(err) {
     res.status(400).json({

@@ -68,7 +68,7 @@ router.get('/api/v1/question/all', function(req, res) {
   });
 });
 
-router.get('/api/v1/question/update/:id', function(req, res) {
+router.get('/api/v1/question/edit/:id', function(req, res) {
 
   console.log(req.params.id);
   var question = new Question();
@@ -85,28 +85,11 @@ router.get('/api/v1/question/update/:id', function(req, res) {
   });
 });
 
-router.get('/api/v1/question/dropdown/:id', function(req, res) {
-
-  console.log(req.params.id);
-  var question = new Question();
-  Question.find({
-    questionID: req.params.id
-  }, function(err, data) {
-    // console.log(data);
-    res.json(data);
-  }).catch(function(err) {
-    res.status(400).json({
-      error: err
-    })
-    return;
-  });
-});
-
 router.post('/api/question/update', function(req, res) {
   data = req.body;
   console.log(data);
   Question.updateOne({
-    _id: req.body.questionID
+    _id: req.body._id
   }, {
     $set: {
       questionName: req.body.questionName,
@@ -122,7 +105,7 @@ router.post('/api/question/update', function(req, res) {
     if (err)
       return err;
   });
-  res.send("done");
+  res.send({successMessage : "Data updated successfully"});
 });
 
 router.post('/api/question/verify', function(req, res) {

@@ -4,10 +4,6 @@
 module.exports = (sequelize, DataTypes) => {
 
   const Subject = sequelize.define('Subject', {
-  // subjectID: {
-  //    type: DataTypes.STRING ,
-  //    primaryKey: true,
-  // },
     subjectName: DataTypes.STRING,
     class: DataTypes.STRING,
     board: DataTypes.STRING,

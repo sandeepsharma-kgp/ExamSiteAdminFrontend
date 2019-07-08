@@ -42,9 +42,14 @@ module.exports = (app) => {
 router.post('/api/topicdropdown/add' , function(req, res)
 {
   body = req.body;
-  // console.log(body.topicId);
+  console.log(body);
+  var boardInitials = body.board.substring(0,4);
+  var temp = boardInitials.concat(body.class);
+  var temp2 = body.subject.substring(0,4).toUpperCase();
+  var SID = temp.concat(temp2);
+  console.log(SID);
   var top = new TopicID();
-  TopicID.find({SID : req.body.SID}, function(err, data) {
+  TopicID.find({SID : SID}, function(err, data) {
     // console.log(data);
     if(err)
     console.log(err);
@@ -61,24 +66,24 @@ router.post('/api/topicdropdown/add' , function(req, res)
 
       console.log(boolean);
       if(boolean == false){
-          TopicID.update({SID: req.body.SID}, { $push: { "topicId": req.body.topicId }}, function(err, result) {
+          TopicID.update({SID: SID}, { $push: { "topicId": req.body.topicId }}, function(err, result) {
               if (err)
                   return err;
-              res.send({successMessage: "Topic added successfully to SID " + req.body.SID});
+              res.send({successMessage: "Topic added successfully to SID " + SID});
           });
       }
       else if(boolean == true) {
         console.log("topic already exists");
-        res.send({errorMessage : "Topic already exists with SID " + req.body.SID});
+        res.send({errorMessage : "Topic already exists with SID " + SID});
       }
     }
     else
     {
       top.topicId = req.body.topicId;
-      top.SID = req.body.SID;
+      top.SID = body.SID;
       top.save();
       console.log("done");
-      res.send({successMessage: "Topic updated successfully to SID " + req.body.SID});
+      res.send({successMessage: "Topic updated successfully to SID " + SID});
     }
   });
 
@@ -86,7 +91,7 @@ router.post('/api/topicdropdown/add' , function(req, res)
 
 
 
-router.get('/api/v1/topic/update/:id', function (req, res) {
+router.get('/api/v1/topic/edit/:id', function (req, res) {
 
   console.log(req.params.id);
   db.topic.findAll({ where: {topicId : req.params.id}}).then(function(data) {
@@ -99,10 +104,10 @@ router.get('/api/v1/topic/update/:id', function (req, res) {
 });
 
 router.post('/api/v1/topic/name/', function (req, res) {
-  id = req.body;
-  // console.log(req.body);
-  db.topic.findAll({ where: {topicId : id.data}}).then(function(data) {
-    // console.log(data);
+  id = req.body.topicId;
+  console.log(id);
+  db.topic.findAll({ where: {topicId : id}}).then(function(data) {
+    console.log(data);
     res.json(data);
   }).catch(function(err) {
     res.status(400).json({ error: err })
@@ -141,10 +146,23 @@ router.get('/api/v1/topic/all', function (req, res) {
   });
 });
 
-router.get('/api/v1/topic/mongo/:id', function (req, res) {
+router.get('/api/v1/topic/mongo/all', function (req, res) {
+  TopicID.find( function(err, data) {
+    res.json(data);
+  }).catch(function(err) {
+    res.status(400).json({ error: err })
+    return;
+  });
+});
 
-  console.log(req.params.id);
-  TopicID.find({SID : req.params.id}, function(err, data) {
+router.post('/api/v1/topic/mongo/', function (req, res) {
+  body = req.body;
+  var boardInitials = body.board.substring(0,4);
+  var temp = boardInitials.concat(body.class);
+  var temp2 = body.subject.substring(0,4).toUpperCase();
+  var SID = temp.concat(temp2);
+  console.log(SID);
+  TopicID.find({SID : SID}, function(err, data) {
     res.json(data);
   }).catch(function(err) {
     res.status(400).json({ error: err })
@@ -160,10 +178,12 @@ router.get('/api/v1/topic/delete/:id', function (req, res) {
    }}).then(function(rowDeleted){ // rowDeleted will return number of rows deleted
       if(rowDeleted === 1){
          console.log('Deleted successfully');
+         res.send({successMessage : "Deleted successfully"});
        }
        console.log(rowDeleted);
     }, function(err){
         console.log(err);
+        res.send({errorMessage : "Error in deletion"});
         return;
     });
 
@@ -174,8 +194,10 @@ router.get('/api/v1/topicmongo/delete/:id', function (req, res) {
   TopicID.deleteOne({"topicId": id}, (err, results) => {
         if(err)
           console.log(err);
+          res.send({errorMessage : "Error in deletion"});
         else {
           console.log("Success");
+          res.send({successMessage : "Deleted successfully"});
         }
     });
 

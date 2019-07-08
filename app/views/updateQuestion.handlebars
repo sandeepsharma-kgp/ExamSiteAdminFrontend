@@ -68,7 +68,7 @@
     url = url.split("/");
     $scope.questionID = url[url.length - 1];
     console.log($scope.questionID);
-    $.get("/api/v1/question/update/" + $scope.questionID, function(data) {
+    $.get("/api/v1/question/edit/" + $scope.questionID, function(data) {
       console.log(data);
       if (data.length == 0) {
 
